@@ -1,0 +1,9 @@
+program miprograma {
+    var x;
+    x = 5;
+    if (false) {
+        println (5+1)*2;
+    } else {
+        println x;
+    }
+}
