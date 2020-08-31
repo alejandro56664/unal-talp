@@ -3,5 +3,5 @@ Repositorio de los laboratorios realizados en el curso "Temas Avanzados en lengu
 
 | Proyecto | Descripción |
 | -- | --- |
-| cora | Es un lenguaje de proposito especifico interpretado |
+| [cora](https://github.com/alejandro56664/unal-talp/tree/master/cora) | Es un lenguaje de proposito especifico interpretado |
 
