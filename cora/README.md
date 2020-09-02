@@ -10,7 +10,7 @@ Lenguaje de jugete creado basado en el excelente tutorial del profesor Jaime Pav
 - Implementación manejo de strings
 
 Ejemplo sintaxis lenguaje
-´´´
+```
 program miprograma {
     var x
     x = 5
@@ -20,27 +20,26 @@ program miprograma {
         log (x-1)/2
     }
 }
-´´´
+```
 
 Idealmente podría ser un lenguaje para aplicar reglas de negocio sobre datos consultados en API Rest
 
 Posibles influencias:
-- SQL
-- GraphQL
+- declarativo
 
-Consumo de API REST nativo
 
-´´´
+Propuesta de API REST nativo
+
+```
 program miprograma {
 	var user_id = 0
-	var user = get from 'https://localhost:3000/api/{ user_id }' | select { id, name, type }
-    if (user.type == 'json') {
+	var user = select { id, name, type } | get from 'https://localhost:3000/api/user/{ user_id }'
+	if (user.type == 'json') {
 		user.mensaje = 'es tipo json'
-		log put user in 'https://localhost:3000/api/{ user_id }'
-		log put { user.id } in 'https://localhost:3000/api/historic/{ user_id }'
-    } else {
+		log put user in 'https://localhost:3000/api/user'
+	} else {
 		log 'procedemos a borrar'
-		delete 'https://localhost:3000/api/{ result.id }'
-    }
+		delete 'https://localhost:3000/api/user/{ user.id }'
+	}
 }
-´´´
+```
