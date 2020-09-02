@@ -1,9 +1,9 @@
 program miprograma {
-    var x;
-    x = 5;
-    if (false) {
-        println (5+1)*2;
+    var x
+    x = 5
+    if (!false && true) {
+        log (5+1)*2
     } else {
-        println x;
+        log (x-1)/2
     }
 }

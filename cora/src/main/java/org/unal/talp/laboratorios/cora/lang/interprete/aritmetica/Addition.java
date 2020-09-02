@@ -1,4 +1,6 @@
-package org.unal.talp.laboratorios.cora.lang.interprete;
+package org.unal.talp.laboratorios.cora.lang.interprete.aritmetica;
+
+import org.unal.talp.laboratorios.cora.lang.interprete.ASTNode;
 
 import java.util.Map;
 

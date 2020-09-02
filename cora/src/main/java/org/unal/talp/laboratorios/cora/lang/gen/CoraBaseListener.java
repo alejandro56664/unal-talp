@@ -1,9 +1,11 @@
-// Generated from C:/ws/unal/temas avanzados de lenguajes de programación/labs/cora/src/main/java\Cora.g4 by ANTLR 4.8
+// Generated from C:/ws/unal/temas avanzados de lenguajes de programación/unal-talp/cora/src/main/java\Cora.g4 by ANTLR 4.8
 package org.unal.talp.laboratorios.cora.lang.gen;
 
     import java.util.Map;
     import java.util.HashMap;
 
+    import org.unal.talp.laboratorios.cora.lang.interprete.aritmetica.*;
+    import org.unal.talp.laboratorios.cora.lang.interprete.logica.*;
     import org.unal.talp.laboratorios.cora.lang.interprete.*;
 
 
@@ -70,13 +72,13 @@ public class CoraBaseListener implements CoraListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPrintln(CoraParser.PrintlnContext ctx) { }
+	@Override public void enterLog(CoraParser.LogContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPrintln(CoraParser.PrintlnContext ctx) { }
+	@Override public void exitLog(CoraParser.LogContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -89,6 +91,18 @@ public class CoraBaseListener implements CoraListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitConditional(CoraParser.ConditionalContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNexpression(CoraParser.NexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNexpression(CoraParser.NexpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

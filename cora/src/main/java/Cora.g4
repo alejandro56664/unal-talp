@@ -4,6 +4,8 @@ grammar Cora;
     import java.util.Map;
     import java.util.HashMap;
 
+    import org.unal.talp.laboratorios.cora.lang.interprete.aritmetica.*;
+    import org.unal.talp.laboratorios.cora.lang.interprete.logica.*;
     import org.unal.talp.laboratorios.cora.lang.interprete.*;
 }
 
@@ -25,24 +27,24 @@ program: PROGRAM ID BRACKET_OPEN
         };
 
 sentence returns [ASTNode node]:
-println { $node = $println.node; }
+log { $node = $log.node; }
 | conditional { $node = $conditional.node; }
 | var_decl { $node = $var_decl.node; }
 | var_assign { $node = $var_assign.node; }
 ;
 
 var_decl returns [ASTNode node]:
-            VAR ID SEMICOLON { $node = new VarDecl($ID.text); }
+            VAR ID { $node = new VarDecl($ID.text); }
             ;
 var_assign returns [ASTNode node]:
-            ID ASSIGN expression SEMICOLON
-         { $node = new VarAssign($ID.text, $expression.node); };
+            ID ASSIGN nexpression
+         { $node = new VarAssign($ID.text, $nexpression.node); };
 
-println returns [ASTNode node]: PRINTLN expression SEMICOLON
-         { $node = new Print($expression.node); };
+log returns [ASTNode node]: LOG nexpression
+         { $node = new Log($nexpression.node); };
 
 conditional returns [ASTNode node]:
-             IF PAR_OPEN expression PAR_CLOSE
+             IF PAR_OPEN nexpression PAR_CLOSE
              {
                 List<ASTNode> body = new ArrayList<ASTNode>();
              }
@@ -53,30 +55,37 @@ conditional returns [ASTNode node]:
              }
              BRACKET_OPEN ( s2=sentence { elseBody.add($s2.node); } )* BRACKET_CLOSE
              {
-                $node = new If($expression.node, body, elseBody);
+                $node = new If($nexpression.node, body, elseBody);
              };
+nexpression returns [ASTNode node]:
+            NOT expression {  $node = new Not($expression.node); }
+            | expression { $node = $expression.node; };
 
 expression returns [ASTNode node]:
             t1 = factor { $node = $t1.node; }
             (
-                PLUS t2 = factor { $node = new Addition($node, $t2.node); }
+                PLUS    t2 = factor { $node = new Addition($node, $t2.node); }
+                | MINUS t3 = factor { $node = new Substraction($node, $t3.node); }
+                | OR    t4 = factor { $node = new Or($node, $t4.node); }
             )*;
 
 factor returns [ASTNode node]:
             t1 = term { $node = $t1.node; }
             (
-                MULT t2 = term { $node = new Multiplication($node, $t2.node); }
+                MULT    t2 = term { $node = new Multiplication($node, $t2.node); }
+                | DIV   t3 = factor { $node = new Division($node, $t3.node); }
+                | AND   t4 = factor { $node = new And($node, $t4.node); }
             )*;
 
 term returns [ASTNode node]:
             NUMBER { $node = new Constant(Integer.parseInt($NUMBER.text)); }
             | ID { $node = new VarRef($ID.text); }
             | BOOLEAN { $node = new Constant(Boolean.parseBoolean($BOOLEAN.text)); }
-            | PAR_OPEN expression { $node =  $expression.node; } PAR_CLOSE;
+            | PAR_OPEN nexpression { $node =  $nexpression.node; } PAR_CLOSE;
 
 PROGRAM: 'program';
 VAR: 'var';
-PRINTLN: 'println';
+LOG: 'log';
 IF: 'if';
 ELSE: 'else';
 
@@ -85,9 +94,9 @@ MINUS: '-';
 MULT: '*';
 DIV: '/';
 
-AND: '&&';
-OR: '||';
-NOT: '!';
+AND: 'and';
+OR: 'or';
+NOT: 'not';
 
 GT: '>';
 LT: '<';
@@ -104,7 +113,6 @@ BRACKET_CLOSE: '}';
 PAR_OPEN: '(';
 PAR_CLOSE: ')';
 
-SEMICOLON: ';';
 
 BOOLEAN: 'true' | 'false';
 
@@ -114,3 +122,5 @@ NUMBER: [0-9]+;
 
 
 WS: [ \t\n\r]+ -> skip;
+
+COMMENT: [#+^\n]* -> skip;

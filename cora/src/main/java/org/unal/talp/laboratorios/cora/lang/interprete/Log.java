@@ -2,10 +2,10 @@ package org.unal.talp.laboratorios.cora.lang.interprete;
 
 import java.util.Map;
 
-public class Print implements ASTNode {
+public class Log implements ASTNode {
     private ASTNode data;
 
-    public Print(ASTNode data) {
+    public Log(ASTNode data) {
         super();
         this.data = data;
     }

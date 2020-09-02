@@ -1,9 +1,11 @@
-// Generated from C:/ws/unal/temas avanzados de lenguajes de programación/labs/cora/src/main/java\Cora.g4 by ANTLR 4.8
+// Generated from C:/ws/unal/temas avanzados de lenguajes de programación/unal-talp/cora/src/main/java\Cora.g4 by ANTLR 4.8
 package org.unal.talp.laboratorios.cora.lang.gen;
 
     import java.util.Map;
     import java.util.HashMap;
 
+    import org.unal.talp.laboratorios.cora.lang.interprete.aritmetica.*;
+    import org.unal.talp.laboratorios.cora.lang.interprete.logica.*;
     import org.unal.talp.laboratorios.cora.lang.interprete.*;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -54,15 +56,15 @@ public interface CoraListener extends ParseTreeListener {
 	 */
 	void exitVar_assign(CoraParser.Var_assignContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CoraParser#println}.
+	 * Enter a parse tree produced by {@link CoraParser#log}.
 	 * @param ctx the parse tree
 	 */
-	void enterPrintln(CoraParser.PrintlnContext ctx);
+	void enterLog(CoraParser.LogContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CoraParser#println}.
+	 * Exit a parse tree produced by {@link CoraParser#log}.
 	 * @param ctx the parse tree
 	 */
-	void exitPrintln(CoraParser.PrintlnContext ctx);
+	void exitLog(CoraParser.LogContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoraParser#conditional}.
 	 * @param ctx the parse tree
@@ -73,6 +75,16 @@ public interface CoraListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitConditional(CoraParser.ConditionalContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CoraParser#nexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterNexpression(CoraParser.NexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CoraParser#nexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitNexpression(CoraParser.NexpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CoraParser#expression}.
 	 * @param ctx the parse tree

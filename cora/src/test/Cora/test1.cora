@@ -1,10 +1,10 @@
 program miprograma {
-    var x=5;
-    println x*2+4;
+    var x=5
+    log x*2+4
 
-    var z = 5 == 5;
+    var z = 5 == 5
 
-    var y = x +4 > 2 && x - 4 < 5;
+    var y = x +4 > 2 and x - 4 < 5
 
-    println y;
+    log y
 }

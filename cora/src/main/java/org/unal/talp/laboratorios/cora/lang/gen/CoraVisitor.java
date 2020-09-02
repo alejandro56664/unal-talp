@@ -1,9 +1,11 @@
-// Generated from C:/ws/unal/temas avanzados de lenguajes de programación/labs/cora/src/main/java\Cora.g4 by ANTLR 4.8
+// Generated from C:/ws/unal/temas avanzados de lenguajes de programación/unal-talp/cora/src/main/java\Cora.g4 by ANTLR 4.8
 package org.unal.talp.laboratorios.cora.lang.gen;
 
     import java.util.Map;
     import java.util.HashMap;
 
+    import org.unal.talp.laboratorios.cora.lang.interprete.aritmetica.*;
+    import org.unal.talp.laboratorios.cora.lang.interprete.logica.*;
     import org.unal.talp.laboratorios.cora.lang.interprete.*;
 
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -41,17 +43,23 @@ public interface CoraVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVar_assign(CoraParser.Var_assignContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CoraParser#println}.
+	 * Visit a parse tree produced by {@link CoraParser#log}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrintln(CoraParser.PrintlnContext ctx);
+	T visitLog(CoraParser.LogContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoraParser#conditional}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitConditional(CoraParser.ConditionalContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CoraParser#nexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNexpression(CoraParser.NexpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CoraParser#expression}.
 	 * @param ctx the parse tree

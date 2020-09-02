@@ -1,9 +1,11 @@
-// Generated from C:/ws/unal/temas avanzados de lenguajes de programación/labs/cora/src/main/java\Cora.g4 by ANTLR 4.8
+// Generated from C:/ws/unal/temas avanzados de lenguajes de programación/unal-talp/cora/src/main/java\Cora.g4 by ANTLR 4.8
 package org.unal.talp.laboratorios.cora.lang.gen;
 
     import java.util.Map;
     import java.util.HashMap;
 
+    import org.unal.talp.laboratorios.cora.lang.interprete.aritmetica.*;
+    import org.unal.talp.laboratorios.cora.lang.interprete.logica.*;
     import org.unal.talp.laboratorios.cora.lang.interprete.*;
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
@@ -51,7 +53,7 @@ public class CoraBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements C
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPrintln(CoraParser.PrintlnContext ctx) { return visitChildren(ctx); }
+	@Override public T visitLog(CoraParser.LogContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -59,6 +61,13 @@ public class CoraBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements C
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitConditional(CoraParser.ConditionalContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitNexpression(CoraParser.NexpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
