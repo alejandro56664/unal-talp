@@ -13,7 +13,7 @@ public class Application
             salida estándar.
          */
 
-        BCCLexer bccLexer = new BCCLexer();
+        //BCCLexer bccLexer = new BCCLexer();
         if (args.length>0) {
             // procesar entrada
         } else {

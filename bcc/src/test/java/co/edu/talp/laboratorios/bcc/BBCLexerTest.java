@@ -13,7 +13,7 @@ public class BBCLexerTest {
     //debería tomar un programa de ejemplo del disco y compararlo
     //la salida experada.
 
-    BCCLexer bccLexer = new BCCLexer();
+
 
     public void run(){
         compareTes1();
@@ -31,14 +31,14 @@ public class BBCLexerTest {
     }
 
     public void compareLexerOutput(String source, String outputExpected){
-        bccLexer.load(source);
+        BCCLexer bccLexer = new BCCLexer(source);
         String outputLexer = bccLexer.analyze();
         compareText(outputLexer, outputExpected);
     }
 
     private void compareText(String output, String outputExpected) {
         DiffMatchPatch dmp = new DiffMatchPatch();
-        LinkedList<DiffMatchPatch.Diff> diff = dmp.diffMain(output, outputExpected, true);
+        LinkedList<DiffMatchPatch.Diff> diff = dmp.diffMain(output, outputExpected, false);
         System.out.println("salida del lexer: ");
         System.out.println(output);
         System.out.println("salida esperada: ");
