@@ -13,17 +13,17 @@ public class BBCLexerTest {
     //debería tomar un programa de ejemplo del disco y compararlo
     //la salida experada.
 
-
+    final String path = "src/test/java/co/edu/talp/laboratorios/bcc/";
 
     public void run(){
-        compareTes1();
+        compareTest("test3");
+        compareTest("test2");
+        compareTest("test1");
     }
 
-    public void compareTes1(){
-        String path = "src/test/java/co/edu/talp/laboratorios/bcc/";
-
-        compareLexerOutputFromFiles(path + "test1.bcc", path + "test1_output.txt");
-        //compareLexerOutputFromFiles("test2.bcc", "test2_output.txt");
+    public void compareTest(String name){
+        System.out.println("Prueba: " + name);
+        compareLexerOutputFromFiles(path + name +".bcc", path + name + "_output.txt");
     }
 
     public void compareLexerOutputFromFiles(String sourceFile, String outputFile){

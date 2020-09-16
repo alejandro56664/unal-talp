@@ -1,10 +1,11 @@
 package co.edu.talp.laboratorios.bcc;
 
+import java.util.Scanner;
+
 public class Application
 {
     public static void main( String[] args) throws Exception
     {
-
         /*
             El programa debe recibir por la entrada estándar el código fuente de un programa escrito
             en el lenguaje de programación bcc. Para evaluar el analizador léxico de forma automática
@@ -13,12 +14,29 @@ public class Application
             salida estándar.
          */
 
-        //BCCLexer bccLexer = new BCCLexer();
         if (args.length>0) {
             // procesar entrada
         } else {
-            //throw new IllegalArgumentException("Debe especificar el nombre del archivo");
+
         }
+
+        System.out.println("BCC Lexer Demo (Presiona Ctrl+D para terminar o en windows Ctrl+Z y luego Ctrl+D)");
+        System.out.print(">>>");
+
+        Scanner sin = new Scanner(System.in);
+        CharSequence end1 = "^D";
+        StringBuilder sb = new StringBuilder();
+        while(sin.hasNextLine())
+        {
+            String nextLine = sin.nextLine();
+
+            if( (nextLine.contains(end1)) == true) break;
+            sb.append(nextLine).append('\n');
+        }
+
+        BCCLexer bccLexer = new BCCLexer(sb.toString());
+
+        System.out.println(bccLexer.analyze());
 
     }
 }

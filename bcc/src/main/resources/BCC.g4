@@ -4,27 +4,6 @@ lexer grammar BCC;
 Donde nombre_token será determinado de la siguiente manera: tk_nombre_token.
 El nombre_token debe ser alguno de la siguiente lista:
 
-tk_mayor,
-tk_mayor_igual,
-tk_menor,
-tk_menor_igual,
-tk_sum_asig,
-tk_res_asig,
-tk_mul_asig,
-tk_div_asig,
-tk_mod_asig,
-tk_igualdad,
-tk_diferente,
-tk_incremento,
-tk_decremento,
-tk_mas,
-tk_menos,
-tk_mul,
-tk_div,
-tk_mod,
-tk_coma,
-
-
 Para mayor claridad para saber cómo usarlos, refiérase a los ejemplos anteriores.
 
  */
@@ -35,21 +14,50 @@ PRINT: 'print';
 NUM: 'num';
 VAR: 'var';
 END: 'end';
+RETURN: 'return';
+IF: 'if';
+ELSE: 'else';
+WHEN: 'when';
+DO: 'do';
+FUNCTION: 'function';
+TRUE: 'true';
+FALSE: 'false';
 
 // simbolos y operadores
 TK_MENOR: '<';
+TK_MENOR_IGUAL: '<=';
+TK_MAYOR: '>';
+TK_MAYOR_IGUAL: '>=';
+TK_IGUALDAD: '==';
+TK_DIFERENTE: '!=';
 TK_ASIGNACION: ':=';
+TK_MAS: '+';
+TK_MENOS: '-';
+TK_MULT: '*';
+TK_DIV: '/';
+TK_MOD: '%';
+TK_SUM_ASIG: '+=';
+TK_RES_ASIG: '-=';
+TK_MUL_ASIG: '*=';
+TK_DIV_ASIG: '/=';
+TK_MOD_ASIG: '%=';
+TK_INCREMENTO: '++';
+TK_DECREMENTO: '--';
+
 TK_LLAVE_IZQ: '{';
 TK_LLAVE_DER: '}';
 TK_PAR_IZQ: '(';
-TK_MAS: '+';
 TK_PAR_DER: ')';
+TK_COMA: ',';
 TK_PUNTOYCOMA: ';';
 TK_DOSPUNTOS: ':';
+
 // El lexema del número puede ser entero o real (sin signo)
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
-TK_NUM: [0-9]+;
+FID: '@' [a-zA-Z_][a-zA-Z0-9_]*;
+TK_NUM: [0-9]+;//('-'?)([0-9]+)('.'?)([0-9]+);
 
+COMMENTARIO: '##' .*? '\n' -> skip;
 //Los comentarios deberán ser ignorados.
 
 /*
