@@ -17,10 +17,14 @@ Para compilar y generar un fat-jar
 mvn clean install
 ```
 
-Para compilar y generar un fat-jar
+Para ejecutar y pasar los programas por la entrada en consola
 ```
-java -jar java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
+
+Se obtendrá un resultado como el de la imagen:
+
+![alt text](./doc/Captura1.PNG)
 
 TODO:
 - Detener el proceso cuando exista un error
