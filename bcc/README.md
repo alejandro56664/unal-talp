@@ -10,6 +10,18 @@ J. D. Velasquez, [“bcc: A suite of Tools for Introducing Compiler Construction
 
 - Desarrollar un analizador léxico para el lenguaje de programación bcc. Para realizar la implementación se podrán únicamente los siguientes lenguajes de programación: Python 3, C/C++ y Java.  
 
+## Ejecución
+
+Para compilar y generar un fat-jar
+```
+mvn clean install
+```
+
+Para compilar y generar un fat-jar
+```
+java -jar java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
 TODO:
 - Detener el proceso cuando exista un error
 - revisar documentación del paper para ver particularidades del lenguaje.
