@@ -44,6 +44,8 @@ public class BCCLexer {
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
+
+
         for (Token token = lexer.nextToken(); token.getType() != Token.EOF; token = lexer.nextToken()) {
             sb.append(toString(token));
             sb.append('\n');

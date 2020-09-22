@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BBCLexerTest {
 
@@ -16,13 +18,15 @@ public class BBCLexerTest {
     final String path = "src/test/java/co/edu/talp/laboratorios/bcc/";
 
     public void run(){
-        compareTest("test3");
-        compareTest("test2");
+
         compareTest("test1");
+        compareTest("test2");
+        compareTest("test3");
+        compareTest("test4");
     }
 
     public void compareTest(String name){
-        System.out.println("Prueba: " + name);
+        System.out.println("\nPrueba: " + name);
         compareLexerOutputFromFiles(path + name +".bcc", path + name + "_output.txt");
     }
 
@@ -38,13 +42,24 @@ public class BBCLexerTest {
 
     private void compareText(String output, String outputExpected) {
         DiffMatchPatch dmp = new DiffMatchPatch();
-        LinkedList<DiffMatchPatch.Diff> diff = dmp.diffMain(output, outputExpected, false);
-        System.out.println("salida del lexer: ");
-        System.out.println(output);
-        System.out.println("salida esperada: ");
-        System.out.println(outputExpected);
-        System.out.println("diferencias: ");
-        System.out.print(diff);
+        LinkedList<DiffMatchPatch.Diff> diffs = dmp.diffMain(output, outputExpected, false);
+        List<DiffMatchPatch.Diff> filteredDiffs = diffs.stream().filter(Diff -> Diff.operation != DiffMatchPatch.Operation.EQUAL).collect(Collectors.toList());
+
+
+        if(filteredDiffs.size() > 0){
+            System.out.println("salida del lexer: ");
+            System.out.println(output);
+            System.out.println("salida esperada: ");
+            System.out.println(outputExpected);
+            System.out.println("diferencias: ");
+            for (DiffMatchPatch.Diff diff: diffs) {
+                System.out.println(diff);
+            }
+        } else {
+            System.out.println("La salida esperada es igual a la del lexer ");
+        }
+
+
     }
 
     private String loadFromFile(String sourceFile) {

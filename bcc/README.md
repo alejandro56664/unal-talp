@@ -22,6 +22,6 @@ Para compilar y generar un fat-jar
 java -jar java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
+También puede ejecutar algunos casos de prueba ejecutando la clase BBLexerTestRunner dentro del IDE como 'aplicación java'
 TODO:
-- Detener el proceso cuando exista un error
 - revisar documentación del paper para ver particularidades del lenguaje.

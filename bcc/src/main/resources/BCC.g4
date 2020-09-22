@@ -55,7 +55,7 @@ TK_DOSPUNTOS: ':';
 // El lexema del número puede ser entero o real (sin signo)
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 FID: '@' [a-zA-Z_][a-zA-Z0-9_]*;
-TK_NUM: [0-9]+;//('-'?)([0-9]+)('.'?)([0-9]+);
+TK_NUM: [0-9]*'.'?[0-9]+;
 
 COMMENTARIO: '##' .*? '\n' -> skip;
 //Los comentarios deberán ser ignorados.
