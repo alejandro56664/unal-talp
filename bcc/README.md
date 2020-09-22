@@ -17,11 +17,19 @@ Para compilar y generar un fat-jar
 mvn clean install
 ```
 
-Para compilar y generar un fat-jar
+Para ejecutar y pasar los programas por la entrada en consola
 ```
-java -jar java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
+Se obtendrá un resultado como el de la imagen:
 
-También puede ejecutar algunos casos de prueba ejecutando la clase BBLexerTestRunner dentro del IDE como 'aplicación java'
+![alt text](./doc/Captura1.PNG)
+
+
+También puede ejecutar algunos casos de prueba ejecutando la clase BBLexerTestRunner en el IDE como 'aplicación java'.
+
+Actualmente existen 4 casos de prueba creados para el lenguaje.
+
 TODO:
 - revisar documentación del paper para ver particularidades del lenguaje.
+
