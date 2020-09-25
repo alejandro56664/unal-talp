@@ -1,6 +1,5 @@
-package co.edu.talp.laboratorios.bcc;
+package co.edu.unal.talp.laboratorios.bcc;
 
-import co.edu.talp.laboratorios.bcc.ErrorHandling;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 

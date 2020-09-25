@@ -1,8 +1,8 @@
-package co.edu.talp.laboratorios.bcc;
+package co.edu.unal.talp.laboratorios.bcc;
 
 import java.util.Scanner;
 
-public class Application
+public class Main
 {
     public static void main( String[] args) throws Exception
     {
@@ -16,12 +16,11 @@ public class Application
 
         if (args.length>0) {
             // procesar entrada
-        } else {
-
+            System.out.println("BCC Lexer Demo (Presiona Ctrl+D para terminar o en windows Ctrl+Z y luego Ctrl+D)");
+            System.out.print(">>>");
         }
 
-        System.out.println("BCC Lexer Demo (Presiona Ctrl+D para terminar o en windows Ctrl+Z y luego Ctrl+D)");
-        System.out.print(">>>");
+
 
         Scanner sin = new Scanner(System.in);
         CharSequence end1 = "^D";

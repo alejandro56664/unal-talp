@@ -75,7 +75,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        co.edu.talp.laboratorios.bcc.Application
+                                        co.edu.unal.talp.laboratorios.bcc.Main
                                     </mainClass>
                                 </manifest>
                             </archive>

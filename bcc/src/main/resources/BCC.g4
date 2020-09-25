@@ -9,16 +9,29 @@ Para mayor claridad para saber cómo usarlos, refiérase a los ejemplos anterior
  */
 
 // Define palabras reservadas
-WHILE: 'while';
+
 PRINT: 'print';
-NUM: 'num';
-VAR: 'var';
-END: 'end';
-RETURN: 'return';
-IF: 'if';
-ELSE: 'else';
+INPUT: 'input';
+WHILE: 'while';
 WHEN: 'when';
+IF: 'if';
+UNLESS: 'unless';
+RETURN: 'return';
+UNTIL: 'until';
+LOOP: 'loop';
 DO: 'do';
+REPEAT: 'repeat';
+FOR: 'for';
+END: 'end';
+NEXT: 'next';
+BREAK: 'break';
+NUM: 'num';
+BOOL: 'bool';
+VAR: 'var';
+AND: 'and';
+OR: 'or';
+NOT: 'not';
+ELSE: 'else';
 FUNCTION: 'function';
 TRUE: 'true';
 FALSE: 'false';
@@ -57,7 +70,7 @@ ID: [a-zA-Z_][a-zA-Z0-9_]*;
 FID: '@' [a-zA-Z_][a-zA-Z0-9_]*;
 TK_NUM: [0-9]*'.'?[0-9]+;
 
-COMMENTARIO: '##' .*? '\n' -> skip;
+COMMENTARIO: '#' .*? '\n' -> skip;
 //Los comentarios deberán ser ignorados.
 
 /*

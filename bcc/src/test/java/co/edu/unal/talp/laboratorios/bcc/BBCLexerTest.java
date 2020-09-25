@@ -1,4 +1,4 @@
-package co.edu.talp.laboratorios.bcc;
+package co.edu.unal.talp.laboratorios.bcc;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 
@@ -15,7 +15,7 @@ public class BBCLexerTest {
     //debería tomar un programa de ejemplo del disco y compararlo
     //la salida experada.
 
-    final String path = "src/test/java/co/edu/talp/laboratorios/bcc/";
+    final String path = "src/test/java/co/edu/unal/talp/laboratorios/bcc/";
 
     public void run(){
 

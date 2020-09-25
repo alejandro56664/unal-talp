@@ -1,6 +1,6 @@
-package co.edu.talp.laboratorios.bcc;
+package co.edu.unal.talp.laboratorios.bcc;
 
-import co.edu.talp.laboratorios.bcc.gen.BCC;
+import co.edu.unal.talp.laboratorios.bcc.gen.BCC;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
@@ -22,12 +22,12 @@ public class BCCLexer {
         DEFAULT
     }
 
-    final static int[] reservedWords = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-    final static int[] operators = {14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32};
-    final static int[] symbols = {33,34,35,36,37,38,39};
-    final static int[] ident = {40};
-    final static int[] function = {41};
-    final static int[] number = {42};
+    final static int[] reservedWords = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+    final static int[] operators = {26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,};
+    final static int[] symbols = {45,46,47,48,49,50,51};
+    final static int[] ident = {52};
+    final static int[] function = {53};
+    final static int[] number = {54};
 
     private BCC lexer;
     private StringBuilder sb;
@@ -50,7 +50,8 @@ public class BCCLexer {
             sb.append(toString(token));
             sb.append('\n');
         }
-
+        //eliminamos el ultimo saldo de linea
+        sb.setLength(sb.length() - 1);
         return sb.toString();
     }
 

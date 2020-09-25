@@ -1,4 +1,4 @@
-package co.edu.talp.laboratorios.bcc;
+package co.edu.unal.talp.laboratorios.bcc;
 
 import java.util.BitSet;
 

@@ -5,6 +5,7 @@
 # Settings folder
 /.settings/
 /.idea/
+/lib/
 
 #Target folder
 /target/
