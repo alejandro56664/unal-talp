@@ -1,6 +1,7 @@
 package co.edu.unal.talp.laboratorios.bcc;
 
-import co.edu.unal.talp.laboratorios.bcc.gen.BCC;
+import co.edu.unal.talp.laboratorios.bcc.gen.BCCLexer;
+import co.edu.unal.talp.laboratorios.bcc.gen.BCCParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
@@ -9,7 +10,7 @@ import org.antlr.v4.runtime.Token;
 /*
 La salida consiste en una lista de tokens separados por saltos de línea,
 */
-public class BCCLexer {
+public class BCCAnalyzer {
     //La idea es encapsular en esta clase el trabajo del lexer
 
     enum TokenGroup {
@@ -29,31 +30,56 @@ public class BCCLexer {
     final static int[] function = {53};
     final static int[] number = {54};
 
-    private BCC lexer;
-    private StringBuilder sb;
+    private BCCLexer lexer;
+    private BCCParser parser;
+    private String source;
 
-    public BCCLexer(String source) {
-        lexer = new BCC(CharStreams.fromString(source));
-        sb = new StringBuilder();
+    public BCCAnalyzer(String source) {
+        this.source = preprocess(source);
     }
 
-    public String analyze() {
+    private String preprocess(String source) {
+        return source.replaceAll("\t", "    ");
+    }
 
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(new LexicalError());
+    public String analyzeLexicon() {
+        StringBuilder sb = new StringBuilder();
 
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-
+        prepareLexer();
 
         for (Token token = lexer.nextToken(); token.getType() != Token.EOF; token = lexer.nextToken()) {
-            sb.append(toString(token));
-            sb.append('\n');
+            System.out.println(toString(token));
+            sb.append(toString(token)).append('\n');
         }
         //eliminamos el ultimo saldo de linea
         sb.setLength(sb.length() - 1);
         return sb.toString();
     }
+
+
+    public void parse(){
+        prepareParser();
+        parser.programa(); // begin parsing at init rule
+
+    }
+
+    private void prepareParser() {
+        prepareLexer();
+
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        parser = new BCCParser(tokens);
+
+        parser.removeErrorListeners();
+        parser.setErrorHandler(new SyntacticalError());
+    }
+
+
+    private void prepareLexer() {
+        lexer = new BCCLexer(CharStreams.fromString(source));
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(new LexicalError());
+    }
+
 
     /*
     - Los operadores y símbolos especiales deben imprimirse en el siguiente formato:  <nombre_token,fila,columna>

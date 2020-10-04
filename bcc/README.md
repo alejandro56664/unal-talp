@@ -9,16 +9,31 @@ J. D. Velasquez, [“bcc: A suite of Tools for Introducing Compiler Construction
 ## Objetivo
 
 - Desarrollar un analizador léxico para el lenguaje de programación bcc. Para realizar la implementación se podrán únicamente los siguientes lenguajes de programación: Python 3, C/C++ y Java.  
+- Desarrollar un analizador sintáctico.
+
+
+## Configuración ANTLR
+
+_TODO_ agregar tutorial instalación plugin ANTLR en IntelliJ
+
+Una vez instalado el plugin deben configurarse los siguientes parámetros:
+(recuerde que las ubicaciones deben ser absolutas, por simplicidad se colocan aquí solo una parte de la ruta)
+```sh
+output directory: [ubicación local del repo]\unal-talp\bcc\src\main\java
+location imported grammarss: [ubicación local del repo]\unal-talp\bcc\src\main\resources
+package/namespace: co.edu.unal.talp.laboratorios.bcc.gen
+```
+
 
 ## Ejecución
 
 Para compilar y generar un fat-jar
-```
+```sh
 mvn clean install
 ```
 
 Para ejecutar y pasar los programas por la entrada en consola
-```
+```sh
 java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 Se obtendrá un resultado como el de la imagen:
@@ -29,6 +44,8 @@ Se obtendrá un resultado como el de la imagen:
 También puede ejecutar algunos casos de prueba ejecutando la clase BBLexerTestRunner en el IDE como 'aplicación java'.
 
 Actualmente existen 4 casos de prueba creados para el lenguaje.
+
+# Analizador sintáctico
 
 TODO:
 - revisar documentación del paper para ver particularidades del lenguaje.

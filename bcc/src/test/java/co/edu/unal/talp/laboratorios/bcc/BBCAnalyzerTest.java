@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BBCLexerTest {
+public class BBCAnalyzerTest {
 
     //debería tomar un programa de ejemplo del disco y compararlo
     //la salida experada.
@@ -19,24 +19,34 @@ public class BBCLexerTest {
 
     public void run(){
 
-        compareTest("test1");
-        compareTest("test2");
-        compareTest("test3");
-        compareTest("test4");
+        compareParserOutput("test6");
+        /*
+        compareLexerOutput("testx");
+        compareLexerOutput("test1");
+        compareLexerOutput("test2");
+        compareLexerOutput("test3");
+        compareLexerOutput("test4");
+        */
+
     }
 
-    public void compareTest(String name){
-        System.out.println("\nPrueba: " + name);
-        compareLexerOutputFromFiles(path + name +".bcc", path + name + "_output.txt");
+
+
+    public void compareParserOutput(String name){
+        System.out.println("\nPrueba parser: " + name);
+        //String outputExpected = loadFromFile(path + name + "_output.txt");
+        String source = loadFromFile(path + name +".bcc");
+        BCCAnalyzer bccAnalyzer = new BCCAnalyzer(source);
+        bccAnalyzer.parse();
+        //compareText(outputLexer, outputExpected);
     }
 
-    public void compareLexerOutputFromFiles(String sourceFile, String outputFile){
-        compareLexerOutput(loadFromFile(sourceFile), loadFromFile(outputFile));
-    }
-
-    public void compareLexerOutput(String source, String outputExpected){
-        BCCLexer bccLexer = new BCCLexer(source);
-        String outputLexer = bccLexer.analyze();
+    public void compareLexerOutput(String name){
+        System.out.println("\nPrueba lexer: " + name);
+        String outputExpected = loadFromFile(path + name + "_output.txt");
+        String source = loadFromFile(path + name +".bcc");
+        BCCAnalyzer bccAnalyzer = new BCCAnalyzer(source);
+        String outputLexer = bccAnalyzer.analyzeLexicon();
         compareText(outputLexer, outputExpected);
     }
 
@@ -47,7 +57,7 @@ public class BBCLexerTest {
 
 
         if(filteredDiffs.size() > 0){
-            System.out.println("salida del lexer: ");
+            System.out.println("salida del programa: ");
             System.out.println(output);
             System.out.println("salida esperada: ");
             System.out.println(outputExpected);

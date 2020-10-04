@@ -1,0 +1,4 @@
+var variable: num;
+variable := 1;
+hola;
+end

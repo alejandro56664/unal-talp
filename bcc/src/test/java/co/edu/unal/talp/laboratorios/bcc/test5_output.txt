@@ -1,0 +1,1 @@
+<2,21> Error sintactico: se encontro: "("; se esperaba: "bool", "num".

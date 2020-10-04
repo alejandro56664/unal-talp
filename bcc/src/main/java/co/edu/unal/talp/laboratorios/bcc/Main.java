@@ -1,4 +1,5 @@
 package co.edu.unal.talp.laboratorios.bcc;
+//Recuerde remover el paquete para subirlo en UNCode
 
 import java.util.Scanner;
 
@@ -16,7 +17,7 @@ public class Main
 
         if (args.length>0) {
             // procesar entrada
-            System.out.println("BCC Lexer Demo (Presiona Ctrl+D para terminar o en windows Ctrl+Z y luego Ctrl+D)");
+            System.out.println("BCC Demo (Presiona Ctrl+D para terminar o en windows Ctrl+Z y luego Ctrl+D)");
             System.out.print(">>>");
         }
 
@@ -33,9 +34,9 @@ public class Main
             sb.append(nextLine).append('\n');
         }
 
-        BCCLexer bccLexer = new BCCLexer(sb.toString());
+        BCCAnalyzer bccAnalyzer = new BCCAnalyzer(sb.toString());
 
-        System.out.println(bccLexer.analyze());
-
+        //para analizar lexico
+        bccAnalyzer.analyzeLexicon();
     }
 }

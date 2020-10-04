@@ -1,0 +1,6 @@
+## función retornay(x, y)
+function @retornay: (x:num, y:num)
+  {
+  return y;
+  }
+end

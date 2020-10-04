@@ -1,1 +1,31 @@
->>> Error lexico(linea:1,posicion:8)
+<id,todos,1,1>
+<id,estos,1,7>
+<id,Deben,1,13>
+<id,ser,1,19>
+<id,marcados,1,23>
+<id,como,1,32>
+<id,identificadores,1,37>
+<id,en,1,53>
+<id,el,1,56>
+<id,lenguaje,1,59>
+<id,bcc,1,68>
+<id,Recuerde,2,1>
+<id,considerar,2,10>
+<id,todas,2,21>
+<id,las,2,27>
+<id,especificaciones,2,31>
+<id,del,2,48>
+<id,documento,2,52>
+<id,de,2,62>
+<id,referencia,2,65>
+<tk_coma,2,75>
+<id,por,2,77>
+<id,ejemplo,2,81>
+<id,aqui,2,89>
+<id,va,3,1>
+<id,a,3,4>
+<id,aparecer,3,6>
+<id,un,3,15>
+<id,error,3,18>
+<id,lexico,3,24>
+>>> Error léxico(línea:3,posición:30)

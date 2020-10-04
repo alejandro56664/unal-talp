@@ -10,7 +10,7 @@ public class LexicalError extends ErrorHandling {
                             Object offendingSymbol, int line, int charPositionInLine,
                             String msg, RecognitionException e) {
 
-        System.err.println("\n>>> Error lexico(linea:"+line+','+"posicion:"+(charPositionInLine+1)+")");
+        System.err.println(">>> Error léxico(línea:"+line+','+"posición:"+(charPositionInLine+1)+")");
         System.exit(0);
     }
 }

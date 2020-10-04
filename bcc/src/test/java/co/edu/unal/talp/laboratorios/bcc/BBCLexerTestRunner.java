@@ -4,7 +4,7 @@ public class BBCLexerTestRunner {
 
     public static void main( String[] args) throws Exception
     {
-        BBCLexerTest bbcLexerTest = new BBCLexerTest();
+        BBCAnalyzerTest bbcLexerTest = new BBCAnalyzerTest();
         bbcLexerTest.run();
     }
 }
