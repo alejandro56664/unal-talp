@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ArrayInit.iml" filepath="$PROJECT_DIR$/ArrayInit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FunCtoPascal.iml" filepath="$PROJECT_DIR$/FunCtoPascal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Infix2Prefix.iml" filepath="$PROJECT_DIR$/Infix2Prefix.iml" />
+    </modules>
+  </component>
+</project>

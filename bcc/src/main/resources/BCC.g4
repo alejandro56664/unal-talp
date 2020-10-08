@@ -20,7 +20,7 @@ main_prog : (TK_VAR var_decl TK_PUNTOYCOMA)* stmt* TK_END;
 Declaración de funciones
 */
 fn_decl_list:
-            TK_FUNCTION FID TK_DOSPUNTOS datatype TK_PAR_IZQ var_decl TK_PAR_DER stmt_block;//[ VAR var_decl TK_PUNTOYCOMA]
+            TK_FUNCTION FID TK_DOSPUNTOS datatype TK_PAR_IZQ var_decl TK_PAR_DER (TK_VAR var_decl TK_PUNTOYCOMA)? stmt_block;
 
 stmt_block: TK_LLAVE_IZQ stmt+ TK_LLAVE_DER
             | stmt;
@@ -43,7 +43,6 @@ stmt: TK_PRINT lexpr TK_PUNTOYCOMA
 	| TK_DO stmt_block TK_UNTIL TK_PAR_IZQ lexpr TK_PAR_DER
 	| TK_REPEAT TK_NUM TK_DOSPUNTOS stmt_block
     | TK_FOR TK_PAR_IZQ lexpr TK_PUNTOYCOMA lexpr TK_PUNTOYCOMA lexpr TK_PAR_DER TK_DO stmt_block
-    | TK_END TK_PUNTOYCOMA
     | TK_NEXT TK_PUNTOYCOMA
     | TK_BREAK TK_PUNTOYCOMA
     | TK_DECREMENTO ID TK_PUNTOYCOMA
@@ -77,7 +76,7 @@ factor: TK_NUM
         | (TK_INCREMENTO | TK_DECREMENTO) ID
         | ID
         | ID (TK_INCREMENTO | TK_DECREMENTO)
-        | TK_PAR_IZQ lexpr TK_PAR_DER //originalmente era lexpr
+        | TK_PAR_IZQ simple_expr TK_PAR_DER //originalmente era lexpr
         | FID TK_PAR_IZQ (lexpr (TK_COMA lexpr)*) TK_PAR_DER;
 
 /*

@@ -1,0 +1,11 @@
+int f(void),                /* function f:integer; */
+    g(float a, int *b);     /* function g(a:real, var b:integer):integer; */
+
+void h(int a, float *c),    /* procedure h(a:integer; var c:real); */
+     j(void);               /* procedure j; */
+
+float f(int a);				/* function f(a:integer):real; */
+
+int f(int a, int b, int c), /* function f(a:integer, b:integer, c:integer):integer; */
+    g(int d),               /* function g(d:integer):integer; */
+    h(int e);               /* function h(e:integer):integer; */
