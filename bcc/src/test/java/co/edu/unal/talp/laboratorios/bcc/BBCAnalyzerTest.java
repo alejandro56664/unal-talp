@@ -19,7 +19,7 @@ public class BBCAnalyzerTest {
 
     public void run(){
 
-        compareParserOutput("test6");
+        compareParserOutput("test9");
         /*
         compareLexerOutput("testx");
         compareLexerOutput("test1");

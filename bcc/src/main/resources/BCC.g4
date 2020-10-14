@@ -64,7 +64,7 @@ lexpr: nexpr ((TK_AND nexpr)* | (TK_OR nexpr)*);
 nexpr: TK_NOT TK_PAR_IZQ lexpr TK_PAR_DER
 	| rexpr;
 
-rexpr: simple_expr ((TK_MENOR|TK_IGUALDAD|TK_MENOR_IGUAL|TK_MAYOR|TK_MAYOR_IGUAL|TK_DIFERENTE) simple_expr)?;
+rexpr: simple_expr ((TK_MENOR|TK_IGUALDAD|TK_MENOR_IGUAL|TK_MAYOR|TK_MAYOR_IGUAL|TK_DIFERENTE) simple_expr)*;
 
 simple_expr: term ((TK_MAS | TK_MENOS) term)*;
 
@@ -76,7 +76,7 @@ factor: TK_NUM
         | (TK_INCREMENTO | TK_DECREMENTO) ID
         | ID
         | ID (TK_INCREMENTO | TK_DECREMENTO)
-        | TK_PAR_IZQ simple_expr TK_PAR_DER //originalmente era lexpr
+        | TK_PAR_IZQ lexpr TK_PAR_DER //originalmente era lexpr
         | FID TK_PAR_IZQ (lexpr (TK_COMA lexpr)*) TK_PAR_DER;
 
 /*

@@ -37,6 +37,7 @@ public class Main
         BCCAnalyzer bccAnalyzer = new BCCAnalyzer(sb.toString());
 
         //para analizar lexico
-        bccAnalyzer.analyzeLexicon();
+        bccAnalyzer.parse();
+        System.out.println("El analisis sintactico ha finalizado correctamente.");
     }
 }
