@@ -19,7 +19,8 @@ public class BBCAnalyzerTest {
     final String path = "src/test/java/co/edu/unal/talp/laboratorios/bcc/fixtures";
 
     public void run(){
-        interpret("repeat_basic");
+        //interpret("repeat_basic");
+        interpret("repeat_vars");
 
         /*
         compareLexerOutput("test1");

@@ -1,12 +1,12 @@
-var pi:num;
-var x:num;
+var pi:num, x:num;
 pi:=3.1415;
 x:=1;
 print pi;
 
 if (pi > 3) do {
     repeat 3: {
-		print pi+x;
+        x:= x + pi;
+		print x;
 	}
 } else {
     print 1;

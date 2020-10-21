@@ -69,14 +69,11 @@ term: factor ((TK_MUL|TK_DIV|TK_MOD) factor)*;
 factor: TK_NUM
         | TRUE
         | FALSE
-        | factor_op;
-
-factor_op: ID                                                           #factorId
-        | (TK_INCREMENTO | TK_DECREMENTO) ID                            #factorPreIncrement
-        | ID (TK_INCREMENTO | TK_DECREMENTO)                            #factorPosIncrement
-        | TK_PAR_IZQ lexpr TK_PAR_DER                                   #factorLexpr
-        | FID TK_PAR_IZQ (lexpr (TK_COMA lexpr)*) TK_PAR_DER            #factorFunction;
-
+        | ID
+        | (TK_INCREMENTO | TK_DECREMENTO) ID
+        | ID (TK_INCREMENTO | TK_DECREMENTO)
+        | TK_PAR_IZQ lexpr TK_PAR_DER
+        | FID TK_PAR_IZQ (lexpr (TK_COMA lexpr)*) TK_PAR_DER;
 /*
 Donde nombre_token será determinado de la siguiente manera: tk_nombre_token.
 El nombre_token debe ser alguno de la siguiente lista:

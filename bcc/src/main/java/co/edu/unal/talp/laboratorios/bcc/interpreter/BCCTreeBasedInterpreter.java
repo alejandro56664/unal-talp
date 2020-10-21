@@ -3,11 +3,47 @@ package co.edu.unal.talp.laboratorios.bcc.interpreter;
 import co.edu.unal.talp.laboratorios.bcc.gen.BCCBaseVisitor;
 import co.edu.unal.talp.laboratorios.bcc.gen.BCCParser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
 
-    //TODO visitar var declaration
-    //TODO visitar var asignación
-    //TODO visitar factor id
+    //TODO agregar control de errores semanticos
+
+    Map<String, Double> numVarTable = new HashMap<>();
+    Map<String, Boolean> boolVarTable = new HashMap<>();
+    Map<String, Object> varTypeTable = new HashMap<>();
+
+    @Override
+    public T visitVar_decl(BCCParser.Var_declContext ctx) {
+        if(ctx.ID().size() == 1){
+            //solo hay una variable
+            registerVar(ctx, 0);
+
+        } else {
+            //hay mas declaraciones
+            for (int i = 0; i < ctx.ID().size(); i++) {
+                registerVar(ctx, i);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public T visitDatatype(BCCParser.DatatypeContext ctx) {
+        if(ctx.TK_BOOLT() != null) return (T) ctx.TK_BOOLT().getText();
+        if(ctx.TK_NUMT() != null) return (T) ctx.TK_NUMT().getText();
+        return null;
+    }
+
+    @Override
+    public T visitAsign(BCCParser.AsignContext ctx) {
+        String id = ctx.ID().getText();
+        Object value = visitLexpr(ctx.lexpr());
+        updateVar(id, value);
+        return null;
+    }
+
     @Override
     public T visitPrint(BCCParser.PrintContext ctx){
         Object t = visitLexpr(ctx.lexpr());
@@ -76,14 +112,14 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
             Boolean nlexpr = !(Boolean) visitLexpr(ctx.lexpr());
             return (T) nlexpr;
         } else {
-            return (T) visitRexpr(ctx.rexpr());
+            return visitRexpr(ctx.rexpr());
         }
     }
 
     @Override
     public T visitRexpr(BCCParser.RexprContext ctx) {
         if(ctx.simple_expr().size() == 1){
-            return (T) visitSimple_expr(ctx.simple_expr(0));
+            return visitSimple_expr(ctx.simple_expr(0));
         } else {
             //suponemos que es mayor que uno
             //reconocemos el operador
@@ -99,15 +135,14 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
     @Override
     public T visitSimple_expr(BCCParser.Simple_exprContext ctx) {
         if(ctx.term().size() == 1){
-            return (T) visitTerm(ctx.term(0));
+            return visitTerm(ctx.term(0));
         } else {
-            Double a = (Double) visitTerm(ctx.term(0));
+            Double r = (Double) visitTerm(ctx.term(0));
             Double n;
-            Double r = 0.0; //teniendo en cuenta que las simple_expr solo maneja sumas o restas
-            for (int i = 0; i < ctx.term().size(); i++) {
-                String op = getAritmeticOperator(ctx, i);
+            for (int i = 1; i < ctx.term().size(); i++) {
+                String op = getAritmeticOperator(ctx, i-1);
                 n = (Double) visitTerm(ctx.term(i));
-                r = compute(op, a, r);
+                r = compute(op, r, n);
             }
             return (T) r;
         }
@@ -119,13 +154,12 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         if(ctx.factor().size() == 1){
             return (T) visitFactor(ctx.factor(0));
         } else {
-            Double a = (Double) visitFactor(ctx.factor(0));
+            Double r = (Double) visitFactor(ctx.factor(0));
             Double n;
-            Double r = 0.0; //teniendo en cuenta que las simple_expr solo maneja sumas o restas
-            for (int i = 0; i < ctx.factor().size(); i++) {
-                String op = getAritmeticOperator(ctx, i);
+            for (int i = 1; i < ctx.factor().size(); i++) {
+                String op = getAritmeticOperator(ctx, i-1);
                 n = (Double) visitFactor(ctx.factor(i));
-                r = compute(op, a, r);
+                r = compute(op, r, n);
             }
             return (T) r;
         }
@@ -137,7 +171,22 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         if(ctx.TK_NUM() != null) return (T) (Double) Double.parseDouble(ctx.TK_NUM().toString());
         if(ctx.TRUE() != null) return (T) (Boolean) Boolean.TRUE;
         if(ctx.FALSE() != null) return (T) (Boolean) Boolean.FALSE;
-        //TODO visitar Factor
+        if(ctx.ID() != null) return visitFactorId(ctx);
+        if(ctx.FID() != null) return visitFactorFid(ctx);
+        if(ctx.lexpr() != null) return visitLexpr(ctx.lexpr(0));
+        return null;
+    }
+
+    public T visitFactorId(BCCParser.FactorContext ctx) {
+        String id = ctx.ID().getText();
+        String type = (String) varTypeTable.get(id);
+        return getVarValue(type, id);
+    }
+
+    public T visitFactorFid(BCCParser.FactorContext ctx) {
+        //TODO visitar factor fid
+        String fid = ctx.FID().getText();
+
         return null;
     }
 
@@ -215,6 +264,51 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         }
 
         return ans;
+    }
+
+
+
+    private void registerVar(BCCParser.Var_declContext ctx, int i) {
+        String id = ctx.ID(i).getText();
+        String type = (String)visitDatatype(ctx.datatype(i));
+        varTypeTable.put(id, type);
+        updateVar(type, id, null);
+    }
+
+    private void updateVar(String id, Object value) {
+        String type = (String) varTypeTable.get(id);
+        updateVar(type, id, value);
+
+    }
+
+    private void updateVar(String type, String id, Object value) {
+
+        switch (type) {
+            case "bool":
+                boolVarTable.put(id, (Boolean) value);
+                break;
+            case "num":
+                numVarTable.put(id, (Double) value);
+                break;
+
+        }
+    }
+
+    private T getVarValue(String type, String id) {
+        T result;
+        switch (type) {
+            case "bool":
+                result = (T) boolVarTable.get(id);
+                break;
+            case "num":
+                result = (T) numVarTable.get(id);
+                break;
+            default:
+                result = null;
+                break;
+
+        }
+        return result;
     }
 
 }

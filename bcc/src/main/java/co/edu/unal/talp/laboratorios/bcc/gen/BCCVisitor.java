@@ -243,39 +243,4 @@ public interface BCCVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFactor(BCCParser.FactorContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code factorId}
-	 * labeled alternative in {@link BCCParser#factor_op}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFactorId(BCCParser.FactorIdContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code factorPreIncrement}
-	 * labeled alternative in {@link BCCParser#factor_op}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFactorPreIncrement(BCCParser.FactorPreIncrementContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code factorPosIncrement}
-	 * labeled alternative in {@link BCCParser#factor_op}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFactorPosIncrement(BCCParser.FactorPosIncrementContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code factorLexpr}
-	 * labeled alternative in {@link BCCParser#factor_op}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFactorLexpr(BCCParser.FactorLexprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code factorFunction}
-	 * labeled alternative in {@link BCCParser#factor_op}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFactorFunction(BCCParser.FactorFunctionContext ctx);
 }
