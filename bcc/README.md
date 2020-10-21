@@ -10,6 +10,7 @@ J. D. Velasquez, [“bcc: A suite of Tools for Introducing Compiler Construction
 
 - Desarrollar un analizador léxico para el lenguaje de programación bcc. Para realizar la implementación se podrán únicamente los siguientes lenguajes de programación: Python 3, C/C++ y Java.  
 - Desarrollar un analizador sintáctico.
+- Desarrollar un Interprete basado en árboles usando el patrón Visitor.
 
 
 ## Configuración ANTLR

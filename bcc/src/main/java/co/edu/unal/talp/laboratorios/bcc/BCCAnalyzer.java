@@ -5,6 +5,7 @@ import co.edu.unal.talp.laboratorios.bcc.gen.BCCParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 
 /*
@@ -57,10 +58,11 @@ public class BCCAnalyzer {
     }
 
 
-    public void parse(){
+    public ParseTree parse(){
         prepareParser();
-        parser.programa(); // begin parsing at init rule
-
+        ParseTree tree = parser.programa(); // begin parsing at init rule
+        System.out.println("El analisis sintactico ha finalizado correctamente.");
+        return tree;
     }
 
     private void prepareParser() {

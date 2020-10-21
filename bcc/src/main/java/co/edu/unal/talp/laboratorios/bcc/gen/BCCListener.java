@@ -68,25 +68,281 @@ public interface BCCListener extends ParseTreeListener {
 	 */
 	void exitDatatype(BCCParser.DatatypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link BCCParser#stmt}.
+	 * Enter a parse tree produced by the {@code print}
+	 * labeled alternative in {@link BCCParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterStmt(BCCParser.StmtContext ctx);
+	void enterPrint(BCCParser.PrintContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link BCCParser#stmt}.
+	 * Exit a parse tree produced by the {@code print}
+	 * labeled alternative in {@link BCCParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitStmt(BCCParser.StmtContext ctx);
+	void exitPrint(BCCParser.PrintContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link BCCParser#stmt_asign}.
+	 * Enter a parse tree produced by the {@code input}
+	 * labeled alternative in {@link BCCParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterStmt_asign(BCCParser.Stmt_asignContext ctx);
+	void enterInput(BCCParser.InputContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link BCCParser#stmt_asign}.
+	 * Exit a parse tree produced by the {@code input}
+	 * labeled alternative in {@link BCCParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitStmt_asign(BCCParser.Stmt_asignContext ctx);
+	void exitInput(BCCParser.InputContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code when}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhen(BCCParser.WhenContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code when}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhen(BCCParser.WhenContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code conditional}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterConditional(BCCParser.ConditionalContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code conditional}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitConditional(BCCParser.ConditionalContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code unless}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnless(BCCParser.UnlessContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code unless}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnless(BCCParser.UnlessContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code while}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile(BCCParser.WhileContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code while}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile(BCCParser.WhileContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code return}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturn(BCCParser.ReturnContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code return}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturn(BCCParser.ReturnContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code until}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterUntil(BCCParser.UntilContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code until}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitUntil(BCCParser.UntilContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code loop}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterLoop(BCCParser.LoopContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code loop}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitLoop(BCCParser.LoopContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code dowhile}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterDowhile(BCCParser.DowhileContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code dowhile}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitDowhile(BCCParser.DowhileContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code dountil}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterDountil(BCCParser.DountilContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code dountil}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitDountil(BCCParser.DountilContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code repeat}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterRepeat(BCCParser.RepeatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code repeat}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitRepeat(BCCParser.RepeatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code for}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor(BCCParser.ForContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code for}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor(BCCParser.ForContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code next}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterNext(BCCParser.NextContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code next}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitNext(BCCParser.NextContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code break}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterBreak(BCCParser.BreakContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code break}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitBreak(BCCParser.BreakContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code decrement}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterDecrement(BCCParser.DecrementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code decrement}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitDecrement(BCCParser.DecrementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code increment}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterIncrement(BCCParser.IncrementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code increment}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitIncrement(BCCParser.IncrementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code asign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterAsign(BCCParser.AsignContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code asign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitAsign(BCCParser.AsignContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code sumAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterSumAsign(BCCParser.SumAsignContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code sumAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitSumAsign(BCCParser.SumAsignContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code resAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterResAsign(BCCParser.ResAsignContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code resAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitResAsign(BCCParser.ResAsignContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code mulAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterMulAsign(BCCParser.MulAsignContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code mulAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitMulAsign(BCCParser.MulAsignContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code divAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterDivAsign(BCCParser.DivAsignContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code divAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitDivAsign(BCCParser.DivAsignContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code modAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterModAsign(BCCParser.ModAsignContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code modAsign}
+	 * labeled alternative in {@link BCCParser#stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitModAsign(BCCParser.ModAsignContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link BCCParser#lexpr}.
 	 * @param ctx the parse tree
@@ -147,4 +403,64 @@ public interface BCCListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFactor(BCCParser.FactorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code factorId}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterFactorId(BCCParser.FactorIdContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code factorId}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitFactorId(BCCParser.FactorIdContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code factorPreIncrement}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterFactorPreIncrement(BCCParser.FactorPreIncrementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code factorPreIncrement}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitFactorPreIncrement(BCCParser.FactorPreIncrementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code factorPosIncrement}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterFactorPosIncrement(BCCParser.FactorPosIncrementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code factorPosIncrement}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitFactorPosIncrement(BCCParser.FactorPosIncrementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code factorLexpr}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterFactorLexpr(BCCParser.FactorLexprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code factorLexpr}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitFactorLexpr(BCCParser.FactorLexprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code factorFunction}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterFactorFunction(BCCParser.FactorFunctionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code factorFunction}
+	 * labeled alternative in {@link BCCParser#factor_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitFactorFunction(BCCParser.FactorFunctionContext ctx);
 }

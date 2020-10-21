@@ -1,6 +1,8 @@
 package co.edu.unal.talp.laboratorios.bcc;
 //Recuerde remover el paquete para subirlo en UNCode
 
+import co.edu.unal.talp.laboratorios.bcc.interpreter.BCCTreeBasedInterpreter;
+
 import java.util.Scanner;
 
 public class Main
@@ -19,6 +21,7 @@ public class Main
             // procesar entrada
             System.out.println("BCC Demo (Presiona Ctrl+D para terminar o en windows Ctrl+Z y luego Ctrl+D)");
             System.out.print(">>>");
+            //TODO agregar opciones para hacer analisis lexico, sintactico y semantico
         }
 
 
@@ -36,8 +39,9 @@ public class Main
 
         BCCAnalyzer bccAnalyzer = new BCCAnalyzer(sb.toString());
 
-        //para analizar lexico
-        bccAnalyzer.parse();
-        System.out.println("El analisis sintactico ha finalizado correctamente.");
+
+        //interpret
+        BCCTreeBasedInterpreter<Object> interpreter = new BCCTreeBasedInterpreter<>();
+        interpreter.visit(bccAnalyzer.parse());
     }
 }

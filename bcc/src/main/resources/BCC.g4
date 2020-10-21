@@ -30,33 +30,29 @@ var_decl: ID TK_DOSPUNTOS datatype (TK_COMA ID TK_DOSPUNTOS datatype)*;
 //Definir datatype
 datatype: TK_NUMT | TK_BOOLT;
 
-stmt: TK_PRINT lexpr TK_PUNTOYCOMA
-	| TK_INPUT ID TK_PUNTOYCOMA
-	| TK_WHEN TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block
-	| TK_IF TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block TK_ELSE stmt_block
-	| TK_UNLESS TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block
-	| TK_WHILE TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block //originalmente era expr
-	| TK_RETURN lexpr TK_PUNTOYCOMA //originalmente era expr
-	| TK_UNTIL TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block
-	| TK_LOOP stmt_block
-	| TK_DO stmt_block TK_WHILE TK_PAR_IZQ lexpr TK_PAR_DER
-	| TK_DO stmt_block TK_UNTIL TK_PAR_IZQ lexpr TK_PAR_DER
-	| TK_REPEAT TK_NUM TK_DOSPUNTOS stmt_block
-    | TK_FOR TK_PAR_IZQ lexpr TK_PUNTOYCOMA lexpr TK_PUNTOYCOMA lexpr TK_PAR_DER TK_DO stmt_block
-    | TK_NEXT TK_PUNTOYCOMA
-    | TK_BREAK TK_PUNTOYCOMA
-    | TK_DECREMENTO ID TK_PUNTOYCOMA
-    | TK_INCREMENTO ID TK_PUNTOYCOMA
-    | stmt_asign;
-
-stmt_asign: ID TK_ASIGNACION lexpr TK_PUNTOYCOMA
-    | ID TK_SUM_ASIG lexpr TK_PUNTOYCOMA
-    | ID TK_RES_ASIG lexpr TK_PUNTOYCOMA
-    | ID TK_MUL_ASIG lexpr TK_PUNTOYCOMA
-    | ID TK_DIV_ASIG lexpr TK_PUNTOYCOMA
-    | ID TK_MOD_ASIG lexpr TK_PUNTOYCOMA
-    | ID TK_INCREMENTO TK_PUNTOYCOMA
-    | ID TK_DECREMENTO TK_PUNTOYCOMA;
+stmt: TK_PRINT lexpr TK_PUNTOYCOMA                                                          #print
+	| TK_INPUT ID TK_PUNTOYCOMA                                                             #input
+	| TK_WHEN TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block                                  #when
+	| TK_IF TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block TK_ELSE stmt_block                 #conditional
+	| TK_UNLESS TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block                                #unless
+	| TK_WHILE TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block                                 #while
+	| TK_RETURN lexpr TK_PUNTOYCOMA                                                         #return
+	| TK_UNTIL TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block                                 #until
+	| TK_LOOP stmt_block                                                                    #loop
+	| TK_DO stmt_block TK_WHILE TK_PAR_IZQ lexpr TK_PAR_DER                                 #dowhile
+	| TK_DO stmt_block TK_UNTIL TK_PAR_IZQ lexpr TK_PAR_DER                                 #dountil
+	| TK_REPEAT TK_NUM TK_DOSPUNTOS stmt_block                                              #repeat
+    | TK_FOR TK_PAR_IZQ lexpr TK_PUNTOYCOMA lexpr TK_PUNTOYCOMA lexpr TK_PAR_DER TK_DO stmt_block #for
+    | TK_NEXT TK_PUNTOYCOMA                                                                 #next
+    | TK_BREAK TK_PUNTOYCOMA                                                                #break
+    | TK_DECREMENTO ID TK_PUNTOYCOMA                                                        #decrement
+    | TK_INCREMENTO ID TK_PUNTOYCOMA                                                        #increment
+    | ID TK_ASIGNACION lexpr TK_PUNTOYCOMA                                                  #asign
+    | ID TK_SUM_ASIG lexpr TK_PUNTOYCOMA                                                    #sumAsign
+    | ID TK_RES_ASIG lexpr TK_PUNTOYCOMA                                                    #resAsign
+    | ID TK_MUL_ASIG lexpr TK_PUNTOYCOMA                                                    #mulAsign
+    | ID TK_DIV_ASIG lexpr TK_PUNTOYCOMA                                                    #divAsign
+    | ID TK_MOD_ASIG lexpr TK_PUNTOYCOMA                                                    #modAsign;
 
 
 lexpr: nexpr ((TK_AND nexpr)* | (TK_OR nexpr)*);
@@ -64,7 +60,7 @@ lexpr: nexpr ((TK_AND nexpr)* | (TK_OR nexpr)*);
 nexpr: TK_NOT TK_PAR_IZQ lexpr TK_PAR_DER
 	| rexpr;
 
-rexpr: simple_expr ((TK_MENOR|TK_IGUALDAD|TK_MENOR_IGUAL|TK_MAYOR|TK_MAYOR_IGUAL|TK_DIFERENTE) simple_expr)*;
+rexpr: simple_expr ((TK_MENOR|TK_IGUALDAD|TK_MENOR_IGUAL|TK_MAYOR|TK_MAYOR_IGUAL|TK_DIFERENTE) simple_expr)?;
 
 simple_expr: term ((TK_MAS | TK_MENOS) term)*;
 
@@ -73,11 +69,13 @@ term: factor ((TK_MUL|TK_DIV|TK_MOD) factor)*;
 factor: TK_NUM
         | TRUE
         | FALSE
-        | (TK_INCREMENTO | TK_DECREMENTO) ID
-        | ID
-        | ID (TK_INCREMENTO | TK_DECREMENTO)
-        | TK_PAR_IZQ lexpr TK_PAR_DER //originalmente era lexpr
-        | FID TK_PAR_IZQ (lexpr (TK_COMA lexpr)*) TK_PAR_DER;
+        | factor_op;
+
+factor_op: ID                                                           #factorId
+        | (TK_INCREMENTO | TK_DECREMENTO) ID                            #factorPreIncrement
+        | ID (TK_INCREMENTO | TK_DECREMENTO)                            #factorPosIncrement
+        | TK_PAR_IZQ lexpr TK_PAR_DER                                   #factorLexpr
+        | FID TK_PAR_IZQ (lexpr (TK_COMA lexpr)*) TK_PAR_DER            #factorFunction;
 
 /*
 Donde nombre_token será determinado de la siguiente manera: tk_nombre_token.

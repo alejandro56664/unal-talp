@@ -29,14 +29,13 @@ public class BCCParser extends Parser {
 		ID=52, FID=53, TK_NUM=54, COMMENTARIO=55, WS=56;
 	public static final int
 		RULE_programa = 0, RULE_main_prog = 1, RULE_fn_decl_list = 2, RULE_stmt_block = 3, 
-		RULE_var_decl = 4, RULE_datatype = 5, RULE_stmt = 6, RULE_stmt_asign = 7, 
-		RULE_lexpr = 8, RULE_nexpr = 9, RULE_rexpr = 10, RULE_simple_expr = 11, 
-		RULE_term = 12, RULE_factor = 13;
+		RULE_var_decl = 4, RULE_datatype = 5, RULE_stmt = 6, RULE_lexpr = 7, RULE_nexpr = 8, 
+		RULE_rexpr = 9, RULE_simple_expr = 10, RULE_term = 11, RULE_factor = 12, 
+		RULE_factor_op = 13;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"programa", "main_prog", "fn_decl_list", "stmt_block", "var_decl", "datatype", 
-			"stmt", "stmt_asign", "lexpr", "nexpr", "rexpr", "simple_expr", "term", 
-			"factor"
+			"stmt", "lexpr", "nexpr", "rexpr", "simple_expr", "term", "factor", "factor_op"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -601,7 +600,107 @@ public class BCCParser extends Parser {
 	}
 
 	public static class StmtContext extends ParserRuleContext {
-		public TerminalNode TK_PRINT() { return getToken(BCCParser.TK_PRINT, 0); }
+		public StmtContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_stmt; }
+	 
+		public StmtContext() { }
+		public void copyFrom(StmtContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class NextContext extends StmtContext {
+		public TerminalNode TK_NEXT() { return getToken(BCCParser.TK_NEXT, 0); }
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public NextContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterNext(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitNext(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitNext(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ConditionalContext extends StmtContext {
+		public TerminalNode TK_IF() { return getToken(BCCParser.TK_IF, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public TerminalNode TK_DO() { return getToken(BCCParser.TK_DO, 0); }
+		public List<Stmt_blockContext> stmt_block() {
+			return getRuleContexts(Stmt_blockContext.class);
+		}
+		public Stmt_blockContext stmt_block(int i) {
+			return getRuleContext(Stmt_blockContext.class,i);
+		}
+		public TerminalNode TK_ELSE() { return getToken(BCCParser.TK_ELSE, 0); }
+		public ConditionalContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterConditional(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitConditional(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitConditional(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class DivAsignContext extends StmtContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_DIV_ASIG() { return getToken(BCCParser.TK_DIV_ASIG, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public DivAsignContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterDivAsign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitDivAsign(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitDivAsign(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class BreakContext extends StmtContext {
+		public TerminalNode TK_BREAK() { return getToken(BCCParser.TK_BREAK, 0); }
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public BreakContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterBreak(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitBreak(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitBreak(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ForContext extends StmtContext {
+		public TerminalNode TK_FOR() { return getToken(BCCParser.TK_FOR, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
 		public List<LexprContext> lexpr() {
 			return getRuleContexts(LexprContext.class);
 		}
@@ -612,51 +711,430 @@ public class BCCParser extends Parser {
 		public TerminalNode TK_PUNTOYCOMA(int i) {
 			return getToken(BCCParser.TK_PUNTOYCOMA, i);
 		}
-		public TerminalNode TK_INPUT() { return getToken(BCCParser.TK_INPUT, 0); }
-		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
-		public TerminalNode TK_WHEN() { return getToken(BCCParser.TK_WHEN, 0); }
-		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
 		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
 		public TerminalNode TK_DO() { return getToken(BCCParser.TK_DO, 0); }
-		public List<Stmt_blockContext> stmt_block() {
-			return getRuleContexts(Stmt_blockContext.class);
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
 		}
-		public Stmt_blockContext stmt_block(int i) {
-			return getRuleContext(Stmt_blockContext.class,i);
-		}
-		public TerminalNode TK_IF() { return getToken(BCCParser.TK_IF, 0); }
-		public TerminalNode TK_ELSE() { return getToken(BCCParser.TK_ELSE, 0); }
-		public TerminalNode TK_UNLESS() { return getToken(BCCParser.TK_UNLESS, 0); }
-		public TerminalNode TK_WHILE() { return getToken(BCCParser.TK_WHILE, 0); }
-		public TerminalNode TK_RETURN() { return getToken(BCCParser.TK_RETURN, 0); }
-		public TerminalNode TK_UNTIL() { return getToken(BCCParser.TK_UNTIL, 0); }
-		public TerminalNode TK_LOOP() { return getToken(BCCParser.TK_LOOP, 0); }
-		public TerminalNode TK_REPEAT() { return getToken(BCCParser.TK_REPEAT, 0); }
-		public TerminalNode TK_NUM() { return getToken(BCCParser.TK_NUM, 0); }
-		public TerminalNode TK_DOSPUNTOS() { return getToken(BCCParser.TK_DOSPUNTOS, 0); }
-		public TerminalNode TK_FOR() { return getToken(BCCParser.TK_FOR, 0); }
-		public TerminalNode TK_NEXT() { return getToken(BCCParser.TK_NEXT, 0); }
-		public TerminalNode TK_BREAK() { return getToken(BCCParser.TK_BREAK, 0); }
-		public TerminalNode TK_DECREMENTO() { return getToken(BCCParser.TK_DECREMENTO, 0); }
-		public TerminalNode TK_INCREMENTO() { return getToken(BCCParser.TK_INCREMENTO, 0); }
-		public Stmt_asignContext stmt_asign() {
-			return getRuleContext(Stmt_asignContext.class,0);
-		}
-		public StmtContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_stmt; }
+		public ForContext(StmtContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterStmt(this);
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterFor(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitStmt(this);
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitFor(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitStmt(this);
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitFor(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class IncrementContext extends StmtContext {
+		public TerminalNode TK_INCREMENTO() { return getToken(BCCParser.TK_INCREMENTO, 0); }
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public IncrementContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterIncrement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitIncrement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitIncrement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class WhileContext extends StmtContext {
+		public TerminalNode TK_WHILE() { return getToken(BCCParser.TK_WHILE, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public TerminalNode TK_DO() { return getToken(BCCParser.TK_DO, 0); }
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
+		}
+		public WhileContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterWhile(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitWhile(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitWhile(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class WhenContext extends StmtContext {
+		public TerminalNode TK_WHEN() { return getToken(BCCParser.TK_WHEN, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public TerminalNode TK_DO() { return getToken(BCCParser.TK_DO, 0); }
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
+		}
+		public WhenContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterWhen(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitWhen(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitWhen(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class DountilContext extends StmtContext {
+		public TerminalNode TK_DO() { return getToken(BCCParser.TK_DO, 0); }
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
+		}
+		public TerminalNode TK_UNTIL() { return getToken(BCCParser.TK_UNTIL, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public DountilContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterDountil(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitDountil(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitDountil(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class DowhileContext extends StmtContext {
+		public TerminalNode TK_DO() { return getToken(BCCParser.TK_DO, 0); }
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
+		}
+		public TerminalNode TK_WHILE() { return getToken(BCCParser.TK_WHILE, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public DowhileContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterDowhile(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitDowhile(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitDowhile(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class InputContext extends StmtContext {
+		public TerminalNode TK_INPUT() { return getToken(BCCParser.TK_INPUT, 0); }
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public InputContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterInput(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitInput(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitInput(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class PrintContext extends StmtContext {
+		public TerminalNode TK_PRINT() { return getToken(BCCParser.TK_PRINT, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public PrintContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterPrint(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitPrint(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitPrint(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class AsignContext extends StmtContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_ASIGNACION() { return getToken(BCCParser.TK_ASIGNACION, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public AsignContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterAsign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitAsign(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitAsign(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class MulAsignContext extends StmtContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_MUL_ASIG() { return getToken(BCCParser.TK_MUL_ASIG, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public MulAsignContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterMulAsign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitMulAsign(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitMulAsign(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class UnlessContext extends StmtContext {
+		public TerminalNode TK_UNLESS() { return getToken(BCCParser.TK_UNLESS, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public TerminalNode TK_DO() { return getToken(BCCParser.TK_DO, 0); }
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
+		}
+		public UnlessContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterUnless(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitUnless(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitUnless(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class LoopContext extends StmtContext {
+		public TerminalNode TK_LOOP() { return getToken(BCCParser.TK_LOOP, 0); }
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
+		}
+		public LoopContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterLoop(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitLoop(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitLoop(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class DecrementContext extends StmtContext {
+		public TerminalNode TK_DECREMENTO() { return getToken(BCCParser.TK_DECREMENTO, 0); }
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public DecrementContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterDecrement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitDecrement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitDecrement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RepeatContext extends StmtContext {
+		public TerminalNode TK_REPEAT() { return getToken(BCCParser.TK_REPEAT, 0); }
+		public TerminalNode TK_NUM() { return getToken(BCCParser.TK_NUM, 0); }
+		public TerminalNode TK_DOSPUNTOS() { return getToken(BCCParser.TK_DOSPUNTOS, 0); }
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
+		}
+		public RepeatContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterRepeat(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitRepeat(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitRepeat(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class SumAsignContext extends StmtContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_SUM_ASIG() { return getToken(BCCParser.TK_SUM_ASIG, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public SumAsignContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterSumAsign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitSumAsign(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitSumAsign(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class UntilContext extends StmtContext {
+		public TerminalNode TK_UNTIL() { return getToken(BCCParser.TK_UNTIL, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public TerminalNode TK_DO() { return getToken(BCCParser.TK_DO, 0); }
+		public Stmt_blockContext stmt_block() {
+			return getRuleContext(Stmt_blockContext.class,0);
+		}
+		public UntilContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterUntil(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitUntil(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitUntil(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ResAsignContext extends StmtContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_RES_ASIG() { return getToken(BCCParser.TK_RES_ASIG, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public ResAsignContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterResAsign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitResAsign(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitResAsign(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ReturnContext extends StmtContext {
+		public TerminalNode TK_RETURN() { return getToken(BCCParser.TK_RETURN, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public ReturnContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterReturn(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitReturn(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitReturn(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ModAsignContext extends StmtContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_MOD_ASIG() { return getToken(BCCParser.TK_MOD_ASIG, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
+		public ModAsignContext(StmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterModAsign(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitModAsign(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitModAsign(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -665,10 +1143,11 @@ public class BCCParser extends Parser {
 		StmtContext _localctx = new StmtContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_stmt);
 		try {
-			setState(183);
+			setState(212);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 			case 1:
+				_localctx = new PrintContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(93);
@@ -680,6 +1159,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new InputContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(97);
@@ -691,6 +1171,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 3:
+				_localctx = new WhenContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(100);
@@ -708,6 +1189,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 4:
+				_localctx = new ConditionalContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(107);
@@ -729,6 +1211,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 5:
+				_localctx = new UnlessContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(116);
@@ -746,6 +1229,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 6:
+				_localctx = new WhileContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(123);
@@ -763,6 +1247,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 7:
+				_localctx = new ReturnContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(130);
@@ -774,6 +1259,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 8:
+				_localctx = new UntilContext(_localctx);
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(134);
@@ -791,6 +1277,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 9:
+				_localctx = new LoopContext(_localctx);
 				enterOuterAlt(_localctx, 9);
 				{
 				setState(141);
@@ -800,6 +1287,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 10:
+				_localctx = new DowhileContext(_localctx);
 				enterOuterAlt(_localctx, 10);
 				{
 				setState(143);
@@ -817,6 +1305,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 11:
+				_localctx = new DountilContext(_localctx);
 				enterOuterAlt(_localctx, 11);
 				{
 				setState(150);
@@ -834,6 +1323,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 12:
+				_localctx = new RepeatContext(_localctx);
 				enterOuterAlt(_localctx, 12);
 				{
 				setState(157);
@@ -847,6 +1337,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 13:
+				_localctx = new ForContext(_localctx);
 				enterOuterAlt(_localctx, 13);
 				{
 				setState(161);
@@ -872,6 +1363,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 14:
+				_localctx = new NextContext(_localctx);
 				enterOuterAlt(_localctx, 14);
 				{
 				setState(172);
@@ -881,6 +1373,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 15:
+				_localctx = new BreakContext(_localctx);
 				enterOuterAlt(_localctx, 15);
 				{
 				setState(174);
@@ -890,6 +1383,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 16:
+				_localctx = new DecrementContext(_localctx);
 				enterOuterAlt(_localctx, 16);
 				{
 				setState(176);
@@ -901,6 +1395,7 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 17:
+				_localctx = new IncrementContext(_localctx);
 				enterOuterAlt(_localctx, 17);
 				{
 				setState(179);
@@ -912,162 +1407,86 @@ public class BCCParser extends Parser {
 				}
 				break;
 			case 18:
+				_localctx = new AsignContext(_localctx);
 				enterOuterAlt(_localctx, 18);
 				{
 				setState(182);
-				stmt_asign();
-				}
-				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class Stmt_asignContext extends ParserRuleContext {
-		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
-		public TerminalNode TK_ASIGNACION() { return getToken(BCCParser.TK_ASIGNACION, 0); }
-		public LexprContext lexpr() {
-			return getRuleContext(LexprContext.class,0);
-		}
-		public TerminalNode TK_PUNTOYCOMA() { return getToken(BCCParser.TK_PUNTOYCOMA, 0); }
-		public TerminalNode TK_SUM_ASIG() { return getToken(BCCParser.TK_SUM_ASIG, 0); }
-		public TerminalNode TK_RES_ASIG() { return getToken(BCCParser.TK_RES_ASIG, 0); }
-		public TerminalNode TK_MUL_ASIG() { return getToken(BCCParser.TK_MUL_ASIG, 0); }
-		public TerminalNode TK_DIV_ASIG() { return getToken(BCCParser.TK_DIV_ASIG, 0); }
-		public TerminalNode TK_MOD_ASIG() { return getToken(BCCParser.TK_MOD_ASIG, 0); }
-		public TerminalNode TK_INCREMENTO() { return getToken(BCCParser.TK_INCREMENTO, 0); }
-		public TerminalNode TK_DECREMENTO() { return getToken(BCCParser.TK_DECREMENTO, 0); }
-		public Stmt_asignContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_stmt_asign; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterStmt_asign(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitStmt_asign(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitStmt_asign(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final Stmt_asignContext stmt_asign() throws RecognitionException {
-		Stmt_asignContext _localctx = new Stmt_asignContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_stmt_asign);
-		try {
-			setState(221);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(185);
 				match(ID);
-				setState(186);
+				setState(183);
 				match(TK_ASIGNACION);
+				setState(184);
+				lexpr();
+				setState(185);
+				match(TK_PUNTOYCOMA);
+				}
+				break;
+			case 19:
+				_localctx = new SumAsignContext(_localctx);
+				enterOuterAlt(_localctx, 19);
+				{
 				setState(187);
-				lexpr();
+				match(ID);
 				setState(188);
-				match(TK_PUNTOYCOMA);
-				}
-				break;
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(190);
-				match(ID);
-				setState(191);
 				match(TK_SUM_ASIG);
+				setState(189);
+				lexpr();
+				setState(190);
+				match(TK_PUNTOYCOMA);
+				}
+				break;
+			case 20:
+				_localctx = new ResAsignContext(_localctx);
+				enterOuterAlt(_localctx, 20);
+				{
 				setState(192);
-				lexpr();
+				match(ID);
 				setState(193);
-				match(TK_PUNTOYCOMA);
-				}
-				break;
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(195);
-				match(ID);
-				setState(196);
 				match(TK_RES_ASIG);
+				setState(194);
+				lexpr();
+				setState(195);
+				match(TK_PUNTOYCOMA);
+				}
+				break;
+			case 21:
+				_localctx = new MulAsignContext(_localctx);
+				enterOuterAlt(_localctx, 21);
+				{
 				setState(197);
-				lexpr();
+				match(ID);
 				setState(198);
-				match(TK_PUNTOYCOMA);
-				}
-				break;
-			case 4:
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(200);
-				match(ID);
-				setState(201);
 				match(TK_MUL_ASIG);
+				setState(199);
+				lexpr();
+				setState(200);
+				match(TK_PUNTOYCOMA);
+				}
+				break;
+			case 22:
+				_localctx = new DivAsignContext(_localctx);
+				enterOuterAlt(_localctx, 22);
+				{
 				setState(202);
-				lexpr();
+				match(ID);
 				setState(203);
-				match(TK_PUNTOYCOMA);
-				}
-				break;
-			case 5:
-				enterOuterAlt(_localctx, 5);
-				{
-				setState(205);
-				match(ID);
-				setState(206);
 				match(TK_DIV_ASIG);
+				setState(204);
+				lexpr();
+				setState(205);
+				match(TK_PUNTOYCOMA);
+				}
+				break;
+			case 23:
+				_localctx = new ModAsignContext(_localctx);
+				enterOuterAlt(_localctx, 23);
+				{
 				setState(207);
-				lexpr();
+				match(ID);
 				setState(208);
-				match(TK_PUNTOYCOMA);
-				}
-				break;
-			case 6:
-				enterOuterAlt(_localctx, 6);
-				{
-				setState(210);
-				match(ID);
-				setState(211);
 				match(TK_MOD_ASIG);
-				setState(212);
+				setState(209);
 				lexpr();
-				setState(213);
-				match(TK_PUNTOYCOMA);
-				}
-				break;
-			case 7:
-				enterOuterAlt(_localctx, 7);
-				{
-				setState(215);
-				match(ID);
-				setState(216);
-				match(TK_INCREMENTO);
-				setState(217);
-				match(TK_PUNTOYCOMA);
-				}
-				break;
-			case 8:
-				enterOuterAlt(_localctx, 8);
-				{
-				setState(218);
-				match(ID);
-				setState(219);
-				match(TK_DECREMENTO);
-				setState(220);
+				setState(210);
 				match(TK_PUNTOYCOMA);
 				}
 				break;
@@ -1120,31 +1539,31 @@ public class BCCParser extends Parser {
 
 	public final LexprContext lexpr() throws RecognitionException {
 		LexprContext _localctx = new LexprContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_lexpr);
+		enterRule(_localctx, 14, RULE_lexpr);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(223);
+			setState(214);
 			nexpr();
-			setState(238);
+			setState(229);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
 			case 1:
 				{
-				setState(228);
+				setState(219);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==TK_AND) {
 					{
 					{
-					setState(224);
+					setState(215);
 					match(TK_AND);
-					setState(225);
+					setState(216);
 					nexpr();
 					}
 					}
-					setState(230);
+					setState(221);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -1152,19 +1571,19 @@ public class BCCParser extends Parser {
 				break;
 			case 2:
 				{
-				setState(235);
+				setState(226);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==TK_OR) {
 					{
 					{
-					setState(231);
+					setState(222);
 					match(TK_OR);
-					setState(232);
+					setState(223);
 					nexpr();
 					}
 					}
-					setState(237);
+					setState(228);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -1215,21 +1634,21 @@ public class BCCParser extends Parser {
 
 	public final NexprContext nexpr() throws RecognitionException {
 		NexprContext _localctx = new NexprContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_nexpr);
+		enterRule(_localctx, 16, RULE_nexpr);
 		try {
-			setState(246);
+			setState(237);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case TK_NOT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(240);
+				setState(231);
 				match(TK_NOT);
-				setState(241);
+				setState(232);
 				match(TK_PAR_IZQ);
-				setState(242);
+				setState(233);
 				lexpr();
-				setState(243);
+				setState(234);
 				match(TK_PAR_DER);
 				}
 				break;
@@ -1243,7 +1662,7 @@ public class BCCParser extends Parser {
 			case TK_NUM:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(245);
+				setState(236);
 				rexpr();
 				}
 				break;
@@ -1269,30 +1688,12 @@ public class BCCParser extends Parser {
 		public Simple_exprContext simple_expr(int i) {
 			return getRuleContext(Simple_exprContext.class,i);
 		}
-		public List<TerminalNode> TK_MENOR() { return getTokens(BCCParser.TK_MENOR); }
-		public TerminalNode TK_MENOR(int i) {
-			return getToken(BCCParser.TK_MENOR, i);
-		}
-		public List<TerminalNode> TK_IGUALDAD() { return getTokens(BCCParser.TK_IGUALDAD); }
-		public TerminalNode TK_IGUALDAD(int i) {
-			return getToken(BCCParser.TK_IGUALDAD, i);
-		}
-		public List<TerminalNode> TK_MENOR_IGUAL() { return getTokens(BCCParser.TK_MENOR_IGUAL); }
-		public TerminalNode TK_MENOR_IGUAL(int i) {
-			return getToken(BCCParser.TK_MENOR_IGUAL, i);
-		}
-		public List<TerminalNode> TK_MAYOR() { return getTokens(BCCParser.TK_MAYOR); }
-		public TerminalNode TK_MAYOR(int i) {
-			return getToken(BCCParser.TK_MAYOR, i);
-		}
-		public List<TerminalNode> TK_MAYOR_IGUAL() { return getTokens(BCCParser.TK_MAYOR_IGUAL); }
-		public TerminalNode TK_MAYOR_IGUAL(int i) {
-			return getToken(BCCParser.TK_MAYOR_IGUAL, i);
-		}
-		public List<TerminalNode> TK_DIFERENTE() { return getTokens(BCCParser.TK_DIFERENTE); }
-		public TerminalNode TK_DIFERENTE(int i) {
-			return getToken(BCCParser.TK_DIFERENTE, i);
-		}
+		public TerminalNode TK_MENOR() { return getToken(BCCParser.TK_MENOR, 0); }
+		public TerminalNode TK_IGUALDAD() { return getToken(BCCParser.TK_IGUALDAD, 0); }
+		public TerminalNode TK_MENOR_IGUAL() { return getToken(BCCParser.TK_MENOR_IGUAL, 0); }
+		public TerminalNode TK_MAYOR() { return getToken(BCCParser.TK_MAYOR, 0); }
+		public TerminalNode TK_MAYOR_IGUAL() { return getToken(BCCParser.TK_MAYOR_IGUAL, 0); }
+		public TerminalNode TK_DIFERENTE() { return getToken(BCCParser.TK_DIFERENTE, 0); }
 		public RexprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1314,20 +1715,19 @@ public class BCCParser extends Parser {
 
 	public final RexprContext rexpr() throws RecognitionException {
 		RexprContext _localctx = new RexprContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_rexpr);
+		enterRule(_localctx, 18, RULE_rexpr);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(248);
+			setState(239);
 			simple_expr();
-			setState(253);
+			setState(242);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TK_MENOR) | (1L << TK_MENOR_IGUAL) | (1L << TK_MAYOR) | (1L << TK_MAYOR_IGUAL) | (1L << TK_IGUALDAD) | (1L << TK_DIFERENTE))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TK_MENOR) | (1L << TK_MENOR_IGUAL) | (1L << TK_MAYOR) | (1L << TK_MAYOR_IGUAL) | (1L << TK_IGUALDAD) | (1L << TK_DIFERENTE))) != 0)) {
 				{
-				{
-				setState(249);
+				setState(240);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TK_MENOR) | (1L << TK_MENOR_IGUAL) | (1L << TK_MAYOR) | (1L << TK_MAYOR_IGUAL) | (1L << TK_IGUALDAD) | (1L << TK_DIFERENTE))) != 0)) ) {
 				_errHandler.recoverInline(this);
@@ -1337,14 +1737,11 @@ public class BCCParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(250);
+				setState(241);
 				simple_expr();
 				}
-				}
-				setState(255);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
 			}
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -1394,20 +1791,20 @@ public class BCCParser extends Parser {
 
 	public final Simple_exprContext simple_expr() throws RecognitionException {
 		Simple_exprContext _localctx = new Simple_exprContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_simple_expr);
+		enterRule(_localctx, 20, RULE_simple_expr);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(256);
+			setState(244);
 			term();
-			setState(261);
+			setState(249);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==TK_MAS || _la==TK_MENOS) {
 				{
 				{
-				setState(257);
+				setState(245);
 				_la = _input.LA(1);
 				if ( !(_la==TK_MAS || _la==TK_MENOS) ) {
 				_errHandler.recoverInline(this);
@@ -1417,11 +1814,11 @@ public class BCCParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(258);
+				setState(246);
 				term();
 				}
 				}
-				setState(263);
+				setState(251);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1478,20 +1875,20 @@ public class BCCParser extends Parser {
 
 	public final TermContext term() throws RecognitionException {
 		TermContext _localctx = new TermContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_term);
+		enterRule(_localctx, 22, RULE_term);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(264);
+			setState(252);
 			factor();
-			setState(269);
+			setState(257);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TK_MUL) | (1L << TK_DIV) | (1L << TK_MOD))) != 0)) {
 				{
 				{
-				setState(265);
+				setState(253);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TK_MUL) | (1L << TK_DIV) | (1L << TK_MOD))) != 0)) ) {
 				_errHandler.recoverInline(this);
@@ -1501,11 +1898,11 @@ public class BCCParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(266);
+				setState(254);
 				factor();
 				}
 				}
-				setState(271);
+				setState(259);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1526,21 +1923,8 @@ public class BCCParser extends Parser {
 		public TerminalNode TK_NUM() { return getToken(BCCParser.TK_NUM, 0); }
 		public TerminalNode TRUE() { return getToken(BCCParser.TRUE, 0); }
 		public TerminalNode FALSE() { return getToken(BCCParser.FALSE, 0); }
-		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
-		public TerminalNode TK_INCREMENTO() { return getToken(BCCParser.TK_INCREMENTO, 0); }
-		public TerminalNode TK_DECREMENTO() { return getToken(BCCParser.TK_DECREMENTO, 0); }
-		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
-		public List<LexprContext> lexpr() {
-			return getRuleContexts(LexprContext.class);
-		}
-		public LexprContext lexpr(int i) {
-			return getRuleContext(LexprContext.class,i);
-		}
-		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
-		public TerminalNode FID() { return getToken(BCCParser.FID, 0); }
-		public List<TerminalNode> TK_COMA() { return getTokens(BCCParser.TK_COMA); }
-		public TerminalNode TK_COMA(int i) {
-			return getToken(BCCParser.TK_COMA, i);
+		public Factor_opContext factor_op() {
+			return getRuleContext(Factor_opContext.class,0);
 		}
 		public FactorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1563,37 +1947,196 @@ public class BCCParser extends Parser {
 
 	public final FactorContext factor() throws RecognitionException {
 		FactorContext _localctx = new FactorContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_factor);
-		int _la;
+		enterRule(_localctx, 24, RULE_factor);
 		try {
-			setState(296);
+			setState(264);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
-			case 1:
+			switch (_input.LA(1)) {
+			case TK_NUM:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(272);
+				setState(260);
 				match(TK_NUM);
 				}
 				break;
-			case 2:
+			case TRUE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(273);
+				setState(261);
 				match(TRUE);
 				}
 				break;
-			case 3:
+			case FALSE:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(274);
+				setState(262);
 				match(FALSE);
 				}
 				break;
-			case 4:
+			case TK_INCREMENTO:
+			case TK_DECREMENTO:
+			case TK_PAR_IZQ:
+			case ID:
+			case FID:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(275);
+				setState(263);
+				factor_op();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Factor_opContext extends ParserRuleContext {
+		public Factor_opContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_factor_op; }
+	 
+		public Factor_opContext() { }
+		public void copyFrom(Factor_opContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class FactorIdContext extends Factor_opContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public FactorIdContext(Factor_opContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterFactorId(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitFactorId(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitFactorId(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FactorPosIncrementContext extends Factor_opContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_INCREMENTO() { return getToken(BCCParser.TK_INCREMENTO, 0); }
+		public TerminalNode TK_DECREMENTO() { return getToken(BCCParser.TK_DECREMENTO, 0); }
+		public FactorPosIncrementContext(Factor_opContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterFactorPosIncrement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitFactorPosIncrement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitFactorPosIncrement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FactorFunctionContext extends Factor_opContext {
+		public TerminalNode FID() { return getToken(BCCParser.FID, 0); }
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public List<LexprContext> lexpr() {
+			return getRuleContexts(LexprContext.class);
+		}
+		public LexprContext lexpr(int i) {
+			return getRuleContext(LexprContext.class,i);
+		}
+		public List<TerminalNode> TK_COMA() { return getTokens(BCCParser.TK_COMA); }
+		public TerminalNode TK_COMA(int i) {
+			return getToken(BCCParser.TK_COMA, i);
+		}
+		public FactorFunctionContext(Factor_opContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterFactorFunction(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitFactorFunction(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitFactorFunction(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FactorPreIncrementContext extends Factor_opContext {
+		public TerminalNode ID() { return getToken(BCCParser.ID, 0); }
+		public TerminalNode TK_INCREMENTO() { return getToken(BCCParser.TK_INCREMENTO, 0); }
+		public TerminalNode TK_DECREMENTO() { return getToken(BCCParser.TK_DECREMENTO, 0); }
+		public FactorPreIncrementContext(Factor_opContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterFactorPreIncrement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitFactorPreIncrement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitFactorPreIncrement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FactorLexprContext extends Factor_opContext {
+		public TerminalNode TK_PAR_IZQ() { return getToken(BCCParser.TK_PAR_IZQ, 0); }
+		public LexprContext lexpr() {
+			return getRuleContext(LexprContext.class,0);
+		}
+		public TerminalNode TK_PAR_DER() { return getToken(BCCParser.TK_PAR_DER, 0); }
+		public FactorLexprContext(Factor_opContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).enterFactorLexpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof BCCListener ) ((BCCListener)listener).exitFactorLexpr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof BCCVisitor ) return ((BCCVisitor<? extends T>)visitor).visitFactorLexpr(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Factor_opContext factor_op() throws RecognitionException {
+		Factor_opContext _localctx = new Factor_opContext(_ctx, getState());
+		enterRule(_localctx, 26, RULE_factor_op);
+		int _la;
+		try {
+			setState(287);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
+			case 1:
+				_localctx = new FactorIdContext(_localctx);
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(266);
+				match(ID);
+				}
+				break;
+			case 2:
+				_localctx = new FactorPreIncrementContext(_localctx);
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(267);
 				_la = _input.LA(1);
 				if ( !(_la==TK_INCREMENTO || _la==TK_DECREMENTO) ) {
 				_errHandler.recoverInline(this);
@@ -1603,23 +2146,17 @@ public class BCCParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(276);
+				setState(268);
 				match(ID);
 				}
 				break;
-			case 5:
-				enterOuterAlt(_localctx, 5);
+			case 3:
+				_localctx = new FactorPosIncrementContext(_localctx);
+				enterOuterAlt(_localctx, 3);
 				{
-				setState(277);
+				setState(269);
 				match(ID);
-				}
-				break;
-			case 6:
-				enterOuterAlt(_localctx, 6);
-				{
-				setState(278);
-				match(ID);
-				setState(279);
+				setState(270);
 				_la = _input.LA(1);
 				if ( !(_la==TK_INCREMENTO || _la==TK_DECREMENTO) ) {
 				_errHandler.recoverInline(this);
@@ -1631,45 +2168,47 @@ public class BCCParser extends Parser {
 				}
 				}
 				break;
-			case 7:
-				enterOuterAlt(_localctx, 7);
+			case 4:
+				_localctx = new FactorLexprContext(_localctx);
+				enterOuterAlt(_localctx, 4);
 				{
-				setState(280);
+				setState(271);
 				match(TK_PAR_IZQ);
-				setState(281);
+				setState(272);
 				lexpr();
-				setState(282);
+				setState(273);
 				match(TK_PAR_DER);
 				}
 				break;
-			case 8:
-				enterOuterAlt(_localctx, 8);
+			case 5:
+				_localctx = new FactorFunctionContext(_localctx);
+				enterOuterAlt(_localctx, 5);
 				{
-				setState(284);
+				setState(275);
 				match(FID);
-				setState(285);
+				setState(276);
 				match(TK_PAR_IZQ);
 				{
-				setState(286);
+				setState(277);
 				lexpr();
-				setState(291);
+				setState(282);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==TK_COMA) {
 					{
 					{
-					setState(287);
+					setState(278);
 					match(TK_COMA);
-					setState(288);
+					setState(279);
 					lexpr();
 					}
 					}
-					setState(293);
+					setState(284);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
 				}
-				setState(294);
+				setState(285);
 				match(TK_PAR_DER);
 				}
 				break;
@@ -1687,7 +2226,7 @@ public class BCCParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3:\u012d\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3:\u0124\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\7\2 \n\2\f\2\16\2#\13\2\3"+
 		"\2\3\2\3\3\3\3\3\3\3\3\7\3+\n\3\f\3\16\3.\13\3\3\3\7\3\61\n\3\f\3\16\3"+
@@ -1698,98 +2237,94 @@ public class BCCParser extends Parser {
 		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
 		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
 		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
-		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\5\b\u00ba\n"+
-		"\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t"+
-		"\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3"+
-		"\t\3\t\5\t\u00e0\n\t\3\n\3\n\3\n\7\n\u00e5\n\n\f\n\16\n\u00e8\13\n\3\n"+
-		"\3\n\7\n\u00ec\n\n\f\n\16\n\u00ef\13\n\5\n\u00f1\n\n\3\13\3\13\3\13\3"+
-		"\13\3\13\3\13\5\13\u00f9\n\13\3\f\3\f\3\f\7\f\u00fe\n\f\f\f\16\f\u0101"+
-		"\13\f\3\r\3\r\3\r\7\r\u0106\n\r\f\r\16\r\u0109\13\r\3\16\3\16\3\16\7\16"+
-		"\u010e\n\16\f\16\16\16\u0111\13\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17"+
-		"\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\7\17\u0124\n\17\f\17"+
-		"\16\17\u0127\13\17\3\17\3\17\5\17\u012b\n\17\3\17\2\2\20\2\4\6\b\n\f\16"+
-		"\20\22\24\26\30\32\34\2\7\3\2\22\23\3\2\34!\3\2#$\3\2%\'\3\2-.\2\u014c"+
-		"\2!\3\2\2\2\4,\3\2\2\2\6\67\3\2\2\2\bO\3\2\2\2\nQ\3\2\2\2\f]\3\2\2\2\16"+
-		"\u00b9\3\2\2\2\20\u00df\3\2\2\2\22\u00e1\3\2\2\2\24\u00f8\3\2\2\2\26\u00fa"+
-		"\3\2\2\2\30\u0102\3\2\2\2\32\u010a\3\2\2\2\34\u012a\3\2\2\2\36 \5\6\4"+
-		"\2\37\36\3\2\2\2 #\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"$\3\2\2\2#!\3\2\2\2"+
-		"$%\5\4\3\2%\3\3\2\2\2&\'\7\24\2\2\'(\5\n\6\2()\7\64\2\2)+\3\2\2\2*&\3"+
-		"\2\2\2+.\3\2\2\2,*\3\2\2\2,-\3\2\2\2-\62\3\2\2\2.,\3\2\2\2/\61\5\16\b"+
-		"\2\60/\3\2\2\2\61\64\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2\2\63\65\3\2\2\2"+
-		"\64\62\3\2\2\2\65\66\7\17\2\2\66\5\3\2\2\2\678\7\31\2\289\7\67\2\29:\7"+
-		"\65\2\2:;\5\f\7\2;<\7\61\2\2<=\5\n\6\2=B\7\62\2\2>?\7\24\2\2?@\5\n\6\2"+
-		"@A\7\64\2\2AC\3\2\2\2B>\3\2\2\2BC\3\2\2\2CD\3\2\2\2DE\5\b\5\2E\7\3\2\2"+
-		"\2FH\7/\2\2GI\5\16\b\2HG\3\2\2\2IJ\3\2\2\2JH\3\2\2\2JK\3\2\2\2KL\3\2\2"+
-		"\2LM\7\60\2\2MP\3\2\2\2NP\5\16\b\2OF\3\2\2\2ON\3\2\2\2P\t\3\2\2\2QR\7"+
-		"\66\2\2RS\7\65\2\2SZ\5\f\7\2TU\7\63\2\2UV\7\66\2\2VW\7\65\2\2WY\5\f\7"+
-		"\2XT\3\2\2\2Y\\\3\2\2\2ZX\3\2\2\2Z[\3\2\2\2[\13\3\2\2\2\\Z\3\2\2\2]^\t"+
-		"\2\2\2^\r\3\2\2\2_`\7\3\2\2`a\5\22\n\2ab\7\64\2\2b\u00ba\3\2\2\2cd\7\4"+
-		"\2\2de\7\66\2\2e\u00ba\7\64\2\2fg\7\6\2\2gh\7\61\2\2hi\5\22\n\2ij\7\62"+
-		"\2\2jk\7\f\2\2kl\5\b\5\2l\u00ba\3\2\2\2mn\7\7\2\2no\7\61\2\2op\5\22\n"+
-		"\2pq\7\62\2\2qr\7\f\2\2rs\5\b\5\2st\7\30\2\2tu\5\b\5\2u\u00ba\3\2\2\2"+
-		"vw\7\b\2\2wx\7\61\2\2xy\5\22\n\2yz\7\62\2\2z{\7\f\2\2{|\5\b\5\2|\u00ba"+
-		"\3\2\2\2}~\7\5\2\2~\177\7\61\2\2\177\u0080\5\22\n\2\u0080\u0081\7\62\2"+
-		"\2\u0081\u0082\7\f\2\2\u0082\u0083\5\b\5\2\u0083\u00ba\3\2\2\2\u0084\u0085"+
-		"\7\t\2\2\u0085\u0086\5\22\n\2\u0086\u0087\7\64\2\2\u0087\u00ba\3\2\2\2"+
-		"\u0088\u0089\7\n\2\2\u0089\u008a\7\61\2\2\u008a\u008b\5\22\n\2\u008b\u008c"+
-		"\7\62\2\2\u008c\u008d\7\f\2\2\u008d\u008e\5\b\5\2\u008e\u00ba\3\2\2\2"+
-		"\u008f\u0090\7\13\2\2\u0090\u00ba\5\b\5\2\u0091\u0092\7\f\2\2\u0092\u0093"+
-		"\5\b\5\2\u0093\u0094\7\5\2\2\u0094\u0095\7\61\2\2\u0095\u0096\5\22\n\2"+
-		"\u0096\u0097\7\62\2\2\u0097\u00ba\3\2\2\2\u0098\u0099\7\f\2\2\u0099\u009a"+
-		"\5\b\5\2\u009a\u009b\7\n\2\2\u009b\u009c\7\61\2\2\u009c\u009d\5\22\n\2"+
-		"\u009d\u009e\7\62\2\2\u009e\u00ba\3\2\2\2\u009f\u00a0\7\r\2\2\u00a0\u00a1"+
-		"\78\2\2\u00a1\u00a2\7\65\2\2\u00a2\u00ba\5\b\5\2\u00a3\u00a4\7\16\2\2"+
-		"\u00a4\u00a5\7\61\2\2\u00a5\u00a6\5\22\n\2\u00a6\u00a7\7\64\2\2\u00a7"+
-		"\u00a8\5\22\n\2\u00a8\u00a9\7\64\2\2\u00a9\u00aa\5\22\n\2\u00aa\u00ab"+
-		"\7\62\2\2\u00ab\u00ac\7\f\2\2\u00ac\u00ad\5\b\5\2\u00ad\u00ba\3\2\2\2"+
-		"\u00ae\u00af\7\20\2\2\u00af\u00ba\7\64\2\2\u00b0\u00b1\7\21\2\2\u00b1"+
-		"\u00ba\7\64\2\2\u00b2\u00b3\7.\2\2\u00b3\u00b4\7\66\2\2\u00b4\u00ba\7"+
-		"\64\2\2\u00b5\u00b6\7-\2\2\u00b6\u00b7\7\66\2\2\u00b7\u00ba\7\64\2\2\u00b8"+
-		"\u00ba\5\20\t\2\u00b9_\3\2\2\2\u00b9c\3\2\2\2\u00b9f\3\2\2\2\u00b9m\3"+
-		"\2\2\2\u00b9v\3\2\2\2\u00b9}\3\2\2\2\u00b9\u0084\3\2\2\2\u00b9\u0088\3"+
-		"\2\2\2\u00b9\u008f\3\2\2\2\u00b9\u0091\3\2\2\2\u00b9\u0098\3\2\2\2\u00b9"+
-		"\u009f\3\2\2\2\u00b9\u00a3\3\2\2\2\u00b9\u00ae\3\2\2\2\u00b9\u00b0\3\2"+
-		"\2\2\u00b9\u00b2\3\2\2\2\u00b9\u00b5\3\2\2\2\u00b9\u00b8\3\2\2\2\u00ba"+
-		"\17\3\2\2\2\u00bb\u00bc\7\66\2\2\u00bc\u00bd\7\"\2\2\u00bd\u00be\5\22"+
-		"\n\2\u00be\u00bf\7\64\2\2\u00bf\u00e0\3\2\2\2\u00c0\u00c1\7\66\2\2\u00c1"+
-		"\u00c2\7(\2\2\u00c2\u00c3\5\22\n\2\u00c3\u00c4\7\64\2\2\u00c4\u00e0\3"+
-		"\2\2\2\u00c5\u00c6\7\66\2\2\u00c6\u00c7\7)\2\2\u00c7\u00c8\5\22\n\2\u00c8"+
-		"\u00c9\7\64\2\2\u00c9\u00e0\3\2\2\2\u00ca\u00cb\7\66\2\2\u00cb\u00cc\7"+
-		"*\2\2\u00cc\u00cd\5\22\n\2\u00cd\u00ce\7\64\2\2\u00ce\u00e0\3\2\2\2\u00cf"+
-		"\u00d0\7\66\2\2\u00d0\u00d1\7+\2\2\u00d1\u00d2\5\22\n\2\u00d2\u00d3\7"+
-		"\64\2\2\u00d3\u00e0\3\2\2\2\u00d4\u00d5\7\66\2\2\u00d5\u00d6\7,\2\2\u00d6"+
-		"\u00d7\5\22\n\2\u00d7\u00d8\7\64\2\2\u00d8\u00e0\3\2\2\2\u00d9\u00da\7"+
-		"\66\2\2\u00da\u00db\7-\2\2\u00db\u00e0\7\64\2\2\u00dc\u00dd\7\66\2\2\u00dd"+
-		"\u00de\7.\2\2\u00de\u00e0\7\64\2\2\u00df\u00bb\3\2\2\2\u00df\u00c0\3\2"+
-		"\2\2\u00df\u00c5\3\2\2\2\u00df\u00ca\3\2\2\2\u00df\u00cf\3\2\2\2\u00df"+
-		"\u00d4\3\2\2\2\u00df\u00d9\3\2\2\2\u00df\u00dc\3\2\2\2\u00e0\21\3\2\2"+
-		"\2\u00e1\u00f0\5\24\13\2\u00e2\u00e3\7\25\2\2\u00e3\u00e5\5\24\13\2\u00e4"+
-		"\u00e2\3\2\2\2\u00e5\u00e8\3\2\2\2\u00e6\u00e4\3\2\2\2\u00e6\u00e7\3\2"+
-		"\2\2\u00e7\u00f1\3\2\2\2\u00e8\u00e6\3\2\2\2\u00e9\u00ea\7\26\2\2\u00ea"+
-		"\u00ec\5\24\13\2\u00eb\u00e9\3\2\2\2\u00ec\u00ef\3\2\2\2\u00ed\u00eb\3"+
-		"\2\2\2\u00ed\u00ee\3\2\2\2\u00ee\u00f1\3\2\2\2\u00ef\u00ed\3\2\2\2\u00f0"+
-		"\u00e6\3\2\2\2\u00f0\u00ed\3\2\2\2\u00f1\23\3\2\2\2\u00f2\u00f3\7\27\2"+
-		"\2\u00f3\u00f4\7\61\2\2\u00f4\u00f5\5\22\n\2\u00f5\u00f6\7\62\2\2\u00f6"+
-		"\u00f9\3\2\2\2\u00f7\u00f9\5\26\f\2\u00f8\u00f2\3\2\2\2\u00f8\u00f7\3"+
-		"\2\2\2\u00f9\25\3\2\2\2\u00fa\u00ff\5\30\r\2\u00fb\u00fc\t\3\2\2\u00fc"+
-		"\u00fe\5\30\r\2\u00fd\u00fb\3\2\2\2\u00fe\u0101\3\2\2\2\u00ff\u00fd\3"+
-		"\2\2\2\u00ff\u0100\3\2\2\2\u0100\27\3\2\2\2\u0101\u00ff\3\2\2\2\u0102"+
-		"\u0107\5\32\16\2\u0103\u0104\t\4\2\2\u0104\u0106\5\32\16\2\u0105\u0103"+
-		"\3\2\2\2\u0106\u0109\3\2\2\2\u0107\u0105\3\2\2\2\u0107\u0108\3\2\2\2\u0108"+
-		"\31\3\2\2\2\u0109\u0107\3\2\2\2\u010a\u010f\5\34\17\2\u010b\u010c\t\5"+
-		"\2\2\u010c\u010e\5\34\17\2\u010d\u010b\3\2\2\2\u010e\u0111\3\2\2\2\u010f"+
-		"\u010d\3\2\2\2\u010f\u0110\3\2\2\2\u0110\33\3\2\2\2\u0111\u010f\3\2\2"+
-		"\2\u0112\u012b\78\2\2\u0113\u012b\7\32\2\2\u0114\u012b\7\33\2\2\u0115"+
-		"\u0116\t\6\2\2\u0116\u012b\7\66\2\2\u0117\u012b\7\66\2\2\u0118\u0119\7"+
-		"\66\2\2\u0119\u012b\t\6\2\2\u011a\u011b\7\61\2\2\u011b\u011c\5\22\n\2"+
-		"\u011c\u011d\7\62\2\2\u011d\u012b\3\2\2\2\u011e\u011f\7\67\2\2\u011f\u0120"+
-		"\7\61\2\2\u0120\u0125\5\22\n\2\u0121\u0122\7\63\2\2\u0122\u0124\5\22\n"+
-		"\2\u0123\u0121\3\2\2\2\u0124\u0127\3\2\2\2\u0125\u0123\3\2\2\2\u0125\u0126"+
-		"\3\2\2\2\u0126\u0128\3\2\2\2\u0127\u0125\3\2\2\2\u0128\u0129\7\62\2\2"+
-		"\u0129\u012b\3\2\2\2\u012a\u0112\3\2\2\2\u012a\u0113\3\2\2\2\u012a\u0114"+
-		"\3\2\2\2\u012a\u0115\3\2\2\2\u012a\u0117\3\2\2\2\u012a\u0118\3\2\2\2\u012a"+
-		"\u011a\3\2\2\2\u012a\u011e\3\2\2\2\u012b\35\3\2\2\2\24!,\62BJOZ\u00b9"+
-		"\u00df\u00e6\u00ed\u00f0\u00f8\u00ff\u0107\u010f\u0125\u012a";
+		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
+		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
+		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\5\b\u00d7\n\b\3\t\3\t\3\t\7\t\u00dc"+
+		"\n\t\f\t\16\t\u00df\13\t\3\t\3\t\7\t\u00e3\n\t\f\t\16\t\u00e6\13\t\5\t"+
+		"\u00e8\n\t\3\n\3\n\3\n\3\n\3\n\3\n\5\n\u00f0\n\n\3\13\3\13\3\13\5\13\u00f5"+
+		"\n\13\3\f\3\f\3\f\7\f\u00fa\n\f\f\f\16\f\u00fd\13\f\3\r\3\r\3\r\7\r\u0102"+
+		"\n\r\f\r\16\r\u0105\13\r\3\16\3\16\3\16\3\16\5\16\u010b\n\16\3\17\3\17"+
+		"\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\7\17\u011b"+
+		"\n\17\f\17\16\17\u011e\13\17\3\17\3\17\5\17\u0122\n\17\3\17\2\2\20\2\4"+
+		"\6\b\n\f\16\20\22\24\26\30\32\34\2\7\3\2\22\23\3\2\34!\3\2#$\3\2%\'\3"+
+		"\2-.\2\u0141\2!\3\2\2\2\4,\3\2\2\2\6\67\3\2\2\2\bO\3\2\2\2\nQ\3\2\2\2"+
+		"\f]\3\2\2\2\16\u00d6\3\2\2\2\20\u00d8\3\2\2\2\22\u00ef\3\2\2\2\24\u00f1"+
+		"\3\2\2\2\26\u00f6\3\2\2\2\30\u00fe\3\2\2\2\32\u010a\3\2\2\2\34\u0121\3"+
+		"\2\2\2\36 \5\6\4\2\37\36\3\2\2\2 #\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"$\3"+
+		"\2\2\2#!\3\2\2\2$%\5\4\3\2%\3\3\2\2\2&\'\7\24\2\2\'(\5\n\6\2()\7\64\2"+
+		"\2)+\3\2\2\2*&\3\2\2\2+.\3\2\2\2,*\3\2\2\2,-\3\2\2\2-\62\3\2\2\2.,\3\2"+
+		"\2\2/\61\5\16\b\2\60/\3\2\2\2\61\64\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2"+
+		"\2\63\65\3\2\2\2\64\62\3\2\2\2\65\66\7\17\2\2\66\5\3\2\2\2\678\7\31\2"+
+		"\289\7\67\2\29:\7\65\2\2:;\5\f\7\2;<\7\61\2\2<=\5\n\6\2=B\7\62\2\2>?\7"+
+		"\24\2\2?@\5\n\6\2@A\7\64\2\2AC\3\2\2\2B>\3\2\2\2BC\3\2\2\2CD\3\2\2\2D"+
+		"E\5\b\5\2E\7\3\2\2\2FH\7/\2\2GI\5\16\b\2HG\3\2\2\2IJ\3\2\2\2JH\3\2\2\2"+
+		"JK\3\2\2\2KL\3\2\2\2LM\7\60\2\2MP\3\2\2\2NP\5\16\b\2OF\3\2\2\2ON\3\2\2"+
+		"\2P\t\3\2\2\2QR\7\66\2\2RS\7\65\2\2SZ\5\f\7\2TU\7\63\2\2UV\7\66\2\2VW"+
+		"\7\65\2\2WY\5\f\7\2XT\3\2\2\2Y\\\3\2\2\2ZX\3\2\2\2Z[\3\2\2\2[\13\3\2\2"+
+		"\2\\Z\3\2\2\2]^\t\2\2\2^\r\3\2\2\2_`\7\3\2\2`a\5\20\t\2ab\7\64\2\2b\u00d7"+
+		"\3\2\2\2cd\7\4\2\2de\7\66\2\2e\u00d7\7\64\2\2fg\7\6\2\2gh\7\61\2\2hi\5"+
+		"\20\t\2ij\7\62\2\2jk\7\f\2\2kl\5\b\5\2l\u00d7\3\2\2\2mn\7\7\2\2no\7\61"+
+		"\2\2op\5\20\t\2pq\7\62\2\2qr\7\f\2\2rs\5\b\5\2st\7\30\2\2tu\5\b\5\2u\u00d7"+
+		"\3\2\2\2vw\7\b\2\2wx\7\61\2\2xy\5\20\t\2yz\7\62\2\2z{\7\f\2\2{|\5\b\5"+
+		"\2|\u00d7\3\2\2\2}~\7\5\2\2~\177\7\61\2\2\177\u0080\5\20\t\2\u0080\u0081"+
+		"\7\62\2\2\u0081\u0082\7\f\2\2\u0082\u0083\5\b\5\2\u0083\u00d7\3\2\2\2"+
+		"\u0084\u0085\7\t\2\2\u0085\u0086\5\20\t\2\u0086\u0087\7\64\2\2\u0087\u00d7"+
+		"\3\2\2\2\u0088\u0089\7\n\2\2\u0089\u008a\7\61\2\2\u008a\u008b\5\20\t\2"+
+		"\u008b\u008c\7\62\2\2\u008c\u008d\7\f\2\2\u008d\u008e\5\b\5\2\u008e\u00d7"+
+		"\3\2\2\2\u008f\u0090\7\13\2\2\u0090\u00d7\5\b\5\2\u0091\u0092\7\f\2\2"+
+		"\u0092\u0093\5\b\5\2\u0093\u0094\7\5\2\2\u0094\u0095\7\61\2\2\u0095\u0096"+
+		"\5\20\t\2\u0096\u0097\7\62\2\2\u0097\u00d7\3\2\2\2\u0098\u0099\7\f\2\2"+
+		"\u0099\u009a\5\b\5\2\u009a\u009b\7\n\2\2\u009b\u009c\7\61\2\2\u009c\u009d"+
+		"\5\20\t\2\u009d\u009e\7\62\2\2\u009e\u00d7\3\2\2\2\u009f\u00a0\7\r\2\2"+
+		"\u00a0\u00a1\78\2\2\u00a1\u00a2\7\65\2\2\u00a2\u00d7\5\b\5\2\u00a3\u00a4"+
+		"\7\16\2\2\u00a4\u00a5\7\61\2\2\u00a5\u00a6\5\20\t\2\u00a6\u00a7\7\64\2"+
+		"\2\u00a7\u00a8\5\20\t\2\u00a8\u00a9\7\64\2\2\u00a9\u00aa\5\20\t\2\u00aa"+
+		"\u00ab\7\62\2\2\u00ab\u00ac\7\f\2\2\u00ac\u00ad\5\b\5\2\u00ad\u00d7\3"+
+		"\2\2\2\u00ae\u00af\7\20\2\2\u00af\u00d7\7\64\2\2\u00b0\u00b1\7\21\2\2"+
+		"\u00b1\u00d7\7\64\2\2\u00b2\u00b3\7.\2\2\u00b3\u00b4\7\66\2\2\u00b4\u00d7"+
+		"\7\64\2\2\u00b5\u00b6\7-\2\2\u00b6\u00b7\7\66\2\2\u00b7\u00d7\7\64\2\2"+
+		"\u00b8\u00b9\7\66\2\2\u00b9\u00ba\7\"\2\2\u00ba\u00bb\5\20\t\2\u00bb\u00bc"+
+		"\7\64\2\2\u00bc\u00d7\3\2\2\2\u00bd\u00be\7\66\2\2\u00be\u00bf\7(\2\2"+
+		"\u00bf\u00c0\5\20\t\2\u00c0\u00c1\7\64\2\2\u00c1\u00d7\3\2\2\2\u00c2\u00c3"+
+		"\7\66\2\2\u00c3\u00c4\7)\2\2\u00c4\u00c5\5\20\t\2\u00c5\u00c6\7\64\2\2"+
+		"\u00c6\u00d7\3\2\2\2\u00c7\u00c8\7\66\2\2\u00c8\u00c9\7*\2\2\u00c9\u00ca"+
+		"\5\20\t\2\u00ca\u00cb\7\64\2\2\u00cb\u00d7\3\2\2\2\u00cc\u00cd\7\66\2"+
+		"\2\u00cd\u00ce\7+\2\2\u00ce\u00cf\5\20\t\2\u00cf\u00d0\7\64\2\2\u00d0"+
+		"\u00d7\3\2\2\2\u00d1\u00d2\7\66\2\2\u00d2\u00d3\7,\2\2\u00d3\u00d4\5\20"+
+		"\t\2\u00d4\u00d5\7\64\2\2\u00d5\u00d7\3\2\2\2\u00d6_\3\2\2\2\u00d6c\3"+
+		"\2\2\2\u00d6f\3\2\2\2\u00d6m\3\2\2\2\u00d6v\3\2\2\2\u00d6}\3\2\2\2\u00d6"+
+		"\u0084\3\2\2\2\u00d6\u0088\3\2\2\2\u00d6\u008f\3\2\2\2\u00d6\u0091\3\2"+
+		"\2\2\u00d6\u0098\3\2\2\2\u00d6\u009f\3\2\2\2\u00d6\u00a3\3\2\2\2\u00d6"+
+		"\u00ae\3\2\2\2\u00d6\u00b0\3\2\2\2\u00d6\u00b2\3\2\2\2\u00d6\u00b5\3\2"+
+		"\2\2\u00d6\u00b8\3\2\2\2\u00d6\u00bd\3\2\2\2\u00d6\u00c2\3\2\2\2\u00d6"+
+		"\u00c7\3\2\2\2\u00d6\u00cc\3\2\2\2\u00d6\u00d1\3\2\2\2\u00d7\17\3\2\2"+
+		"\2\u00d8\u00e7\5\22\n\2\u00d9\u00da\7\25\2\2\u00da\u00dc\5\22\n\2\u00db"+
+		"\u00d9\3\2\2\2\u00dc\u00df\3\2\2\2\u00dd\u00db\3\2\2\2\u00dd\u00de\3\2"+
+		"\2\2\u00de\u00e8\3\2\2\2\u00df\u00dd\3\2\2\2\u00e0\u00e1\7\26\2\2\u00e1"+
+		"\u00e3\5\22\n\2\u00e2\u00e0\3\2\2\2\u00e3\u00e6\3\2\2\2\u00e4\u00e2\3"+
+		"\2\2\2\u00e4\u00e5\3\2\2\2\u00e5\u00e8\3\2\2\2\u00e6\u00e4\3\2\2\2\u00e7"+
+		"\u00dd\3\2\2\2\u00e7\u00e4\3\2\2\2\u00e8\21\3\2\2\2\u00e9\u00ea\7\27\2"+
+		"\2\u00ea\u00eb\7\61\2\2\u00eb\u00ec\5\20\t\2\u00ec\u00ed\7\62\2\2\u00ed"+
+		"\u00f0\3\2\2\2\u00ee\u00f0\5\24\13\2\u00ef\u00e9\3\2\2\2\u00ef\u00ee\3"+
+		"\2\2\2\u00f0\23\3\2\2\2\u00f1\u00f4\5\26\f\2\u00f2\u00f3\t\3\2\2\u00f3"+
+		"\u00f5\5\26\f\2\u00f4\u00f2\3\2\2\2\u00f4\u00f5\3\2\2\2\u00f5\25\3\2\2"+
+		"\2\u00f6\u00fb\5\30\r\2\u00f7\u00f8\t\4\2\2\u00f8\u00fa\5\30\r\2\u00f9"+
+		"\u00f7\3\2\2\2\u00fa\u00fd\3\2\2\2\u00fb\u00f9\3\2\2\2\u00fb\u00fc\3\2"+
+		"\2\2\u00fc\27\3\2\2\2\u00fd\u00fb\3\2\2\2\u00fe\u0103\5\32\16\2\u00ff"+
+		"\u0100\t\5\2\2\u0100\u0102\5\32\16\2\u0101\u00ff\3\2\2\2\u0102\u0105\3"+
+		"\2\2\2\u0103\u0101\3\2\2\2\u0103\u0104\3\2\2\2\u0104\31\3\2\2\2\u0105"+
+		"\u0103\3\2\2\2\u0106\u010b\78\2\2\u0107\u010b\7\32\2\2\u0108\u010b\7\33"+
+		"\2\2\u0109\u010b\5\34\17\2\u010a\u0106\3\2\2\2\u010a\u0107\3\2\2\2\u010a"+
+		"\u0108\3\2\2\2\u010a\u0109\3\2\2\2\u010b\33\3\2\2\2\u010c\u0122\7\66\2"+
+		"\2\u010d\u010e\t\6\2\2\u010e\u0122\7\66\2\2\u010f\u0110\7\66\2\2\u0110"+
+		"\u0122\t\6\2\2\u0111\u0112\7\61\2\2\u0112\u0113\5\20\t\2\u0113\u0114\7"+
+		"\62\2\2\u0114\u0122\3\2\2\2\u0115\u0116\7\67\2\2\u0116\u0117\7\61\2\2"+
+		"\u0117\u011c\5\20\t\2\u0118\u0119\7\63\2\2\u0119\u011b\5\20\t\2\u011a"+
+		"\u0118\3\2\2\2\u011b\u011e\3\2\2\2\u011c\u011a\3\2\2\2\u011c\u011d\3\2"+
+		"\2\2\u011d\u011f\3\2\2\2\u011e\u011c\3\2\2\2\u011f\u0120\7\62\2\2\u0120"+
+		"\u0122\3\2\2\2\u0121\u010c\3\2\2\2\u0121\u010d\3\2\2\2\u0121\u010f\3\2"+
+		"\2\2\u0121\u0111\3\2\2\2\u0121\u0115\3\2\2\2\u0122\35\3\2\2\2\24!,\62"+
+		"BJOZ\u00d6\u00dd\u00e4\u00e7\u00ef\u00f4\u00fb\u0103\u010a\u011c\u0121";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

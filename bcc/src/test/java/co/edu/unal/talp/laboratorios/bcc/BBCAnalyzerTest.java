@@ -1,5 +1,6 @@
 package co.edu.unal.talp.laboratorios.bcc;
 
+import co.edu.unal.talp.laboratorios.bcc.interpreter.BCCTreeBasedInterpreter;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 
 import java.io.BufferedReader;
@@ -13,23 +14,37 @@ import java.util.stream.Collectors;
 public class BBCAnalyzerTest {
 
     //debería tomar un programa de ejemplo del disco y compararlo
-    //la salida experada.
+    //la salida esperada.
 
-    final String path = "src/test/java/co/edu/unal/talp/laboratorios/bcc/";
+    final String path = "src/test/java/co/edu/unal/talp/laboratorios/bcc/fixtures";
 
     public void run(){
+        interpret("repeat_basic");
 
-        compareParserOutput("test9");
         /*
-        compareLexerOutput("testx");
         compareLexerOutput("test1");
         compareLexerOutput("test2");
         compareLexerOutput("test3");
         compareLexerOutput("test4");
         */
 
+        /*
+        compareParserOutput("test5");
+        compareParserOutput("test6");
+        compareParserOutput("test7");
+        compareParserOutput("test8");
+        compareParserOutput("test9");
+         */
+
     }
 
+    public void interpret(String name){
+        System.out.println("\nPrueba interpreter: " + name);
+        String source = loadFromFile("src/test/java/co/edu/unal/talp/laboratorios/bcc/" + name +".bcc");
+        BCCAnalyzer bccAnalyzer = new BCCAnalyzer(source);
+        BCCTreeBasedInterpreter<Object> bccInterpreter = new BCCTreeBasedInterpreter<>();
+        bccInterpreter.visit(bccAnalyzer.parse());
+    }
 
 
     public void compareParserOutput(String name){
