@@ -18,10 +18,13 @@ public class BBCAnalyzerTest {
 
     final String path = "src/test/java/co/edu/unal/talp/laboratorios/bcc/fixtures";
 
+    SourceLoader sourceLoader = new SourceLoader();
     public void run(){
         //interpret("repeat_basic");
-        interpret("repeat_vars");
-
+        //interpret("repeat_vars");
+        //interpret("fun_basic");
+        //interpret("repeat_fun");
+        interpret("repeat_fun_input");
         /*
         compareLexerOutput("test1");
         compareLexerOutput("test2");
@@ -41,7 +44,7 @@ public class BBCAnalyzerTest {
 
     public void interpret(String name){
         System.out.println("\nPrueba interpreter: " + name);
-        String source = loadFromFile("src/test/java/co/edu/unal/talp/laboratorios/bcc/" + name +".bcc");
+        String source = sourceLoader.loadFromFile("src/test/java/co/edu/unal/talp/laboratorios/bcc/" + name +".bcc");
         BCCAnalyzer bccAnalyzer = new BCCAnalyzer(source);
         BCCTreeBasedInterpreter<Object> bccInterpreter = new BCCTreeBasedInterpreter<>();
         bccInterpreter.visit(bccAnalyzer.parse());
@@ -51,7 +54,7 @@ public class BBCAnalyzerTest {
     public void compareParserOutput(String name){
         System.out.println("\nPrueba parser: " + name);
         //String outputExpected = loadFromFile(path + name + "_output.txt");
-        String source = loadFromFile(path + name +".bcc");
+        String source = sourceLoader.loadFromFile(path + name +".bcc");
         BCCAnalyzer bccAnalyzer = new BCCAnalyzer(source);
         bccAnalyzer.parse();
         //compareText(outputLexer, outputExpected);
@@ -59,8 +62,8 @@ public class BBCAnalyzerTest {
 
     public void compareLexerOutput(String name){
         System.out.println("\nPrueba lexer: " + name);
-        String outputExpected = loadFromFile(path + name + "_output.txt");
-        String source = loadFromFile(path + name +".bcc");
+        String outputExpected = sourceLoader.loadFromFile(path + name + "_output.txt");
+        String source = sourceLoader.loadFromFile(path + name +".bcc");
         BCCAnalyzer bccAnalyzer = new BCCAnalyzer(source);
         String outputLexer = bccAnalyzer.analyzeLexicon();
         compareText(outputLexer, outputExpected);
@@ -87,29 +90,5 @@ public class BBCAnalyzerTest {
 
 
     }
-
-    private String loadFromFile(String sourceFile) {
-        String sourceContent = "";
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(sourceFile));
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = br.readLine();
-            }
-            sourceContent = sb.toString();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return sourceContent;
-    }
-
 
 }

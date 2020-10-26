@@ -3,7 +3,7 @@ package co.edu.unal.talp.laboratorios.bcc;
 
 import co.edu.unal.talp.laboratorios.bcc.interpreter.BCCTreeBasedInterpreter;
 
-import java.util.Scanner;
+import org.apache.commons.cli.*;
 
 public class Main
 {
@@ -17,30 +17,62 @@ public class Main
             salida estándar.
          */
 
+        SourceLoader sourceLoader = new SourceLoader();
+
         if (args.length>0) {
             // procesar entrada
+            CommandLine cmd = configureCommandLine(args);
+
             System.out.println("BCC Demo (Presiona Ctrl+D para terminar o en windows Ctrl+Z y luego Ctrl+D)");
-            System.out.print(">>>");
-            //TODO agregar opciones para hacer analisis lexico, sintactico y semantico
+
+            String isInteractive = cmd.getOptionValue("interactive");
+            String sourceFilePath = cmd.getOptionValue("source");
+
+            if(isInteractive != null) {
+                System.out.print(isInteractive);
+                System.out.print(">>>");
+                interpret(sourceLoader.loadFromConsole());
+
+            } else if(sourceFilePath !=null){
+                interpret(sourceLoader.loadFromFile(sourceFilePath));
+            }
+
+
+        } else {
+            interpret(sourceLoader.loadFromConsole());
         }
 
+    }
 
+    //TODO agregar opciones para hacer analisis lexico, sintactico y semantico
+    private static CommandLine configureCommandLine(String[] args) {
+        Options options = new Options();
 
-        Scanner sin = new Scanner(System.in);
-        CharSequence end1 = "^D";
-        StringBuilder sb = new StringBuilder();
-        while(sin.hasNextLine())
-        {
-            String nextLine = sin.nextLine();
+        Option interactive = new Option("i", "interactive", false, "interactive function");
+        interactive.setRequired(false);
+        options.addOption(interactive);
 
-            if( (nextLine.contains(end1)) == true) break;
-            sb.append(nextLine).append('\n');
+        Option source = new Option("s", "source", true, "source input file");
+        source.setRequired(false);
+        options.addOption(source);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd;
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("utility-name", options);
+            cmd = null;
+            System.exit(1);
         }
+        return cmd;
+    }
 
-        BCCAnalyzer bccAnalyzer = new BCCAnalyzer(sb.toString());
-
-
-        //interpret
+    private static void interpret(String source){
+        BCCAnalyzer bccAnalyzer = new BCCAnalyzer(source);
         BCCTreeBasedInterpreter<Object> interpreter = new BCCTreeBasedInterpreter<>();
         interpreter.visit(bccAnalyzer.parse());
     }

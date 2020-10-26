@@ -1,0 +1,20 @@
+
+function @suma:num (a:num, b: num) {
+    return a+b;
+}
+
+var pi:num, x:num;
+pi:=3.1415;
+print pi;
+
+input x;
+
+if (x > 3) do {
+    repeat 3: {
+        x+= @suma(x,pi);
+		print x;
+	}
+} else {
+    print x;
+}
+end;

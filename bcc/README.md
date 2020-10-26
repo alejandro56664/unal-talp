@@ -35,12 +35,16 @@ mvn clean install
 
 Para ejecutar y pasar los programas por la entrada en consola
 ```sh
-java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar -i
 ```
 Se obtendrá un resultado como el de la imagen:
 
 ![alt text](./doc/Captura1.PNG)
 
+Para ejecutar y pasar los programas desde un archivo
+```sh
+java -jar bcc-1.0-SNAPSHOT-jar-with-dependencies.jar -s <ruta progrma>
+```
 
 También puede ejecutar algunos casos de prueba ejecutando la clase BBLexerTestRunner en el IDE como 'aplicación java'.
 

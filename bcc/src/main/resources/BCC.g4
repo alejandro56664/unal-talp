@@ -6,7 +6,7 @@ Programa
         - Una lista de funciones (opcional)
         - Un programa principal
 */
-programa: fn_decl_list* main_prog;
+programa: fn_decl_list* main_prog; //OK
 
 /*
 A su vez, el programa principal (main_prog) está formado así:
@@ -14,46 +14,48 @@ Una única lista de declaración de variables (opcional)
 Una lista de sentencias (0 o muchas)
 */
 
-main_prog : (TK_VAR var_decl TK_PUNTOYCOMA)* stmt* TK_END;
+main_prog : (TK_VAR var_decl TK_PUNTOYCOMA)* stmt* TK_END; //OK
 
 /*
 Declaración de funciones
 */
-fn_decl_list:
+fn_decl_list: //OK
             TK_FUNCTION FID TK_DOSPUNTOS datatype TK_PAR_IZQ var_decl TK_PAR_DER (TK_VAR var_decl TK_PUNTOYCOMA)? stmt_block;
 
-stmt_block: TK_LLAVE_IZQ stmt+ TK_LLAVE_DER
+stmt_block: TK_LLAVE_IZQ stmt+ TK_LLAVE_DER //OK
             | stmt;
 
-var_decl: ID TK_DOSPUNTOS datatype (TK_COMA ID TK_DOSPUNTOS datatype)*;
+var_decl: ID TK_DOSPUNTOS datatype (TK_COMA ID TK_DOSPUNTOS datatype)*; //OK
 
 //Definir datatype
-datatype: TK_NUMT | TK_BOOLT;
+datatype: TK_NUMT | TK_BOOLT; //OK
 
-stmt: TK_PRINT lexpr TK_PUNTOYCOMA                                                          #print
+stmt: TK_PRINT lexpr TK_PUNTOYCOMA                                                          #print      //OK
 	| TK_INPUT ID TK_PUNTOYCOMA                                                             #input
 	| TK_WHEN TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block                                  #when
-	| TK_IF TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block TK_ELSE stmt_block                 #conditional
+	| TK_IF TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block TK_ELSE stmt_block                 #conditional //OK
 	| TK_UNLESS TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block                                #unless
 	| TK_WHILE TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block                                 #while
-	| TK_RETURN lexpr TK_PUNTOYCOMA                                                         #return
+	| TK_RETURN lexpr TK_PUNTOYCOMA                                                         #return     //OK
 	| TK_UNTIL TK_PAR_IZQ lexpr TK_PAR_DER TK_DO stmt_block                                 #until
 	| TK_LOOP stmt_block                                                                    #loop
 	| TK_DO stmt_block TK_WHILE TK_PAR_IZQ lexpr TK_PAR_DER                                 #dowhile
 	| TK_DO stmt_block TK_UNTIL TK_PAR_IZQ lexpr TK_PAR_DER                                 #dountil
-	| TK_REPEAT TK_NUM TK_DOSPUNTOS stmt_block                                              #repeat
+	| TK_REPEAT TK_NUM TK_DOSPUNTOS stmt_block                                              #repeat     //OK
     | TK_FOR TK_PAR_IZQ lexpr TK_PUNTOYCOMA lexpr TK_PUNTOYCOMA lexpr TK_PAR_DER TK_DO stmt_block #for
     | TK_NEXT TK_PUNTOYCOMA                                                                 #next
     | TK_BREAK TK_PUNTOYCOMA                                                                #break
     | TK_DECREMENTO ID TK_PUNTOYCOMA                                                        #decrement
     | TK_INCREMENTO ID TK_PUNTOYCOMA                                                        #increment
-    | ID TK_ASIGNACION lexpr TK_PUNTOYCOMA                                                  #asign
-    | ID TK_SUM_ASIG lexpr TK_PUNTOYCOMA                                                    #sumAsign
-    | ID TK_RES_ASIG lexpr TK_PUNTOYCOMA                                                    #resAsign
-    | ID TK_MUL_ASIG lexpr TK_PUNTOYCOMA                                                    #mulAsign
-    | ID TK_DIV_ASIG lexpr TK_PUNTOYCOMA                                                    #divAsign
-    | ID TK_MOD_ASIG lexpr TK_PUNTOYCOMA                                                    #modAsign;
+    | ID TK_ASIGNACION lexpr TK_PUNTOYCOMA                                                  #asign      //OK
+    | ID TK_SUM_ASIG lexpr TK_PUNTOYCOMA                                                    #sumAsign   //OK
+    | ID TK_RES_ASIG lexpr TK_PUNTOYCOMA                                                    #resAsign   //OK
+    | ID TK_MUL_ASIG lexpr TK_PUNTOYCOMA                                                    #mulAsign   //OK
+    | ID TK_DIV_ASIG lexpr TK_PUNTOYCOMA                                                    #divAsign   //OK
+    | ID TK_MOD_ASIG lexpr TK_PUNTOYCOMA                                                    #modAsign;  //OK
 
+
+//OK
 
 lexpr: nexpr ((TK_AND nexpr)* | (TK_OR nexpr)*);
 
