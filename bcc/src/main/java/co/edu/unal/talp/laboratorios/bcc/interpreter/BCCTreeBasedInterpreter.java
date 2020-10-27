@@ -27,22 +27,35 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         Map<String, String> args = new HashMap<>();
         Map<String, String> vars = new HashMap<>();
 
-        abstractVar_decl(ctx.var_decl(0), (nameType)-> args.put(nameType.a, nameType.b));
-
-        if(ctx.var_decl().size() > 1) {
-            //solo se ejecuta si hay una declaración de variables
-            abstractVar_decl(ctx.var_decl(1), (nameType)-> vars.put(nameType.a, nameType.b));
+        try {
+            abstractVar_decl(ctx.var_decl(0), (nameType)-> args.put(nameType.a, nameType.b));
+            if(ctx.var_decl().size() > 1) {
+                //solo se ejecuta si hay una declaración de variables
+                abstractVar_decl(ctx.var_decl(1), (nameType)-> vars.put(nameType.a, nameType.b));
+            }
+        } catch (VarAlreadyDeclaredException e) {
+            reportSemanticError(ctx.getStart(), e);
         }
 
         FunctionSymbol fs = new FunctionSymbol(fid, args, returnType, vars, body);
-        functions.put(fid, fs);
+
+        try {
+            addFunctionToStack(fid, fs);
+        } catch (FunctionAlreadyDeclaredException e) {
+            reportSemanticError(ctx.getStart(), e);
+        }
+
         return null;
     }
 
 
     @Override
     public T visitVar_decl(BCCParser.Var_declContext ctx) {
-        abstractVar_decl(ctx, (nameType)-> currentSpace.registerVar(nameType.a, nameType.b));
+        try {
+            abstractVar_decl(ctx, (nameType)-> currentSpace.registerVar(nameType.a, nameType.b));
+        } catch (VarAlreadyDeclaredException e) {
+            reportSemanticError(ctx.getStart(), e);
+        }
         return null;
     }
 
@@ -272,7 +285,12 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
             String op = getCompareOperator(ctx);
             Object a =  visitSimple_expr(ctx.simple_expr(0));
             Object b =  visitSimple_expr(ctx.simple_expr(1));
-            Boolean result = compare(op, a, b);
+            Boolean result = null;
+            try {
+                result = compare(op, a, b);
+            } catch (SemanticException e) {
+                reportSemanticError(ctx.getStart(), e);
+            }
             return (T) result;
         }
 
@@ -288,7 +306,11 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
             for (int i = 1; i < ctx.term().size(); i++) {
                 String op = getAritmeticOperator(ctx, i-1);
                 n = (Double) visitTerm(ctx.term(i));
-                r = compute(op, r, n);
+                try {
+                    r = compute(op, r, n);
+                } catch (SemanticException e) {
+                    reportSemanticError(ctx.getStart(), e);
+                }
             }
             return (T) r;
         }
@@ -306,7 +328,11 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
             for (int i = 1; i < ctx.factor().size(); i++) {
                 String op = getAritmeticOperator(ctx, i-1);
                 n = (Double) visitFactor(ctx.factor(i));
-                r = compute(op, r, n);
+                try {
+                    r = compute(op, r, n);
+                } catch (SemanticException e) {
+                    reportSemanticError(ctx.getStart(), e);
+                }
             }
             return (T) r;
         }
@@ -404,10 +430,6 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         //creamos un nuevo memoryspace para la función
         FunctionSpace<T> functionSpace = new FunctionSpace<>(fs);
 
-        //revisar esta cambio donde es mejor
-        MemorySpace<T> savedSpace = currentSpace;
-        currentSpace = functionSpace;
-        stack.add(functionSpace);
 
 
         //obtenemos los parametros antes de llamar a la función
@@ -416,6 +438,12 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
 
         //una vez obtenidos se cargan en el memory space
         functionSpace.load(args);
+
+        //revisar esta cambio donde es mejor
+        MemorySpace<T> savedSpace = currentSpace;
+        currentSpace = functionSpace;
+        stack.add(functionSpace);
+
 
         //se invoca la ejecución de la función
         visitStmt_block((BCCParser.Stmt_blockContext) fs.getBody());
@@ -454,7 +482,7 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         return "";
     }
 
-    private Boolean compare(String op, Object a, Object b) {
+    private Boolean compare(String op, Object a, Object b) throws SemanticException {
         if(a instanceof Boolean && b instanceof Boolean){
             return compareBooleans(op, (Boolean)a, (Boolean)b);
         } else {
@@ -462,7 +490,7 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         }
     }
 
-    private Boolean compareBooleans(String op, Boolean term1, Boolean term2) {
+    private Boolean compareBooleans(String op, Boolean term1, Boolean term2) throws SemanticException {
         Boolean ans = null;
 
         switch (op) {
@@ -473,13 +501,12 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
                 ans = term1 != term2;
                 break;
             default:
-                reportSemanticError(String.format("El operador de comparación '%s' es invalido con variables tipo bool", op));
-                break;
+                throw new SemanticException(String.format("El operador de comparación '%s' es invalido", op));
         }
         return ans;
     }
 
-    private Boolean compareNumbers(String op, Double num1, Double num2){
+    private Boolean compareNumbers(String op, Double num1, Double num2) throws SemanticException {
         //TODO hacer referencia a los token directamente y no a sus lexemas
         Boolean ans = null;
 
@@ -503,14 +530,14 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
                 ans = Math.abs(num1-num2) > 0.000000001;
                 break;
             default:
-                reportSemanticError(String.format("El operador de comparación '%s' es invalido", op));
-                break;
+                throw new SemanticException(String.format("El operador de comparación '%s' es invalido", op));
+
         }
 
         return ans;
     }
 
-    private Double compute(String op, Double num1, Double num2) {
+    private Double compute(String op, Double num1, Double num2) throws SemanticException {
         //TODO hacer referencia a los token directamente y no a sus lexemas
         Double ans = null;
         switch (op){
@@ -534,9 +561,7 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
                 break;
 
             default:
-                reportSemanticError(String.format("El operador aritmetico '%s' es invalido", op));
-                break;
-
+                throw new SemanticException(String.format("El operador aritmetico '%s' es invalido", op));
         }
 
         return ans;
@@ -570,7 +595,8 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         return new Pair<>(id,type);
     }
 
-    private void abstractVar_decl(BCCParser.Var_declContext ctx, Consumer<Pair<String,String>> registerVar) {
+    private void abstractVar_decl(BCCParser.Var_declContext ctx, Consumer<Pair<String,String>> registerVar) throws VarAlreadyDeclaredException {
+        //TODO disparar excepción si una variable ya esta declarada
         Pair<String,String> nameType;
         if(ctx.ID().size() == 1){
             //solo hay una variable
@@ -584,6 +610,11 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
                 registerVar.accept(nameType);
             }
         }
+    }
+
+    private void addFunctionToStack(String fid, FunctionSymbol fs) throws FunctionAlreadyDeclaredException {
+        //TODO disparar excepción si la función ya esta declarada
+        functions.put(fid, fs);
     }
 
     private void updateVar(String id, Object value) throws VarNotDeclaredException {
@@ -624,7 +655,7 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
 
 
     private void reportSemanticError(Token token, SemanticException sex) {
-        sex.setPosition(token.getLine(), token.getCharPositionInLine());
+        sex.setPosition(token.getLine(), token.getCharPositionInLine()+1);
         reportSemanticError(sex.toString());
     }
 

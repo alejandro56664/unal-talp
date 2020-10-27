@@ -23,10 +23,13 @@ public class BBCAnalyzerTest {
         //interpret("repeat_basic");
         //interpret("repeat_vars");
         //interpret("fun_basic");
+        //interpret("fun_basic2");
         //interpret("repeat_fun");
         //interpret("repeat_for");
         //interpret("example_paper1");
-        interpret("example_paper2");
+        //interpret("example_paper2");
+        //interpret("factorial");
+        interpret("fibonacci_iterativo");
         //interpret("repeat_fun_input");
         /*
         compareLexerOutput("test1");
