@@ -1,5 +1,6 @@
 package co.edu.unal.talp.laboratorios.bcc.interpreter;
 
+import co.edu.unal.talp.laboratorios.bcc.exceptions.VarNeverAssignedException;
 import co.edu.unal.talp.laboratorios.bcc.exceptions.VarNotDeclaredException;
 
 import java.util.HashMap;
@@ -40,10 +41,18 @@ public class MemorySpace<T> {
 
 
 
-    public T getVarValue(String id) throws VarNotDeclaredException {
+    public T getVarValue(String id) throws VarNotDeclaredException, VarNeverAssignedException {
         String type = (String) varTypeTable.get(id);
         checkExistence(id, type);
-        return getVarValue(type, id);
+        T value = getVarValue(type, id);
+        checkValue(id, value);
+        return value;
+    }
+
+    private void checkValue(String id, T value) throws VarNeverAssignedException {
+        if(value == null){
+            throw new VarNeverAssignedException(id);
+        }
     }
 
     private void checkExistence(String id, String type) throws VarNotDeclaredException {

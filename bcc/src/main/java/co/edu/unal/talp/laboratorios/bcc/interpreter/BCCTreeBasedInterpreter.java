@@ -1,10 +1,9 @@
 package co.edu.unal.talp.laboratorios.bcc.interpreter;
 
-import co.edu.unal.talp.laboratorios.bcc.exceptions.FunctionNotDeclaredException;
-import co.edu.unal.talp.laboratorios.bcc.exceptions.InvalidArgsException;
-import co.edu.unal.talp.laboratorios.bcc.exceptions.VarNotDeclaredException;
+import co.edu.unal.talp.laboratorios.bcc.exceptions.*;
 import co.edu.unal.talp.laboratorios.bcc.gen.BCCBaseVisitor;
 import co.edu.unal.talp.laboratorios.bcc.gen.BCCParser;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -17,7 +16,7 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
     private MemorySpace<T> currentSpace = global;
     private Deque<FunctionSpace<T> > stack = new LinkedList<>();
     private Map<String, FunctionSymbol> functions = new HashMap<>();
-
+    private boolean breakSignal = false;
 
     @Override
     public T visitFn_decl_list(BCCParser.Fn_decl_listContext ctx) {
@@ -55,49 +54,39 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         return null;
     }
 
+    //stmt
     @Override
-    public T visitAsign(BCCParser.AsignContext ctx) {
+    public T visitAsigns(BCCParser.AsignsContext ctx){
         String id = ctx.ID().getText();
-        Object value = visitLexpr(ctx.lexpr());
 
-        try {
-            updateVar(id, value);
-        } catch (Exception e) {
-           reportSemanticError(e);
+        if(ctx.TK_ASIGNACION() != null) {
+            //asignación común y corriente, la de toda la vida
+            Object value = visitLexpr(ctx.lexpr());
+            try {
+                updateVar(id, value);
+            } catch (SemanticException se) {
+                reportSemanticError(ctx.getStart(), se);
+            } catch (Exception e){
+                reportSemanticError(e.toString());
+            }
+        } else if(ctx.TK_SUM_ASIG() != null) {
+            abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "+");
+        } else if(ctx.TK_RES_ASIG() != null) {
+            abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "-");
+        } else if(ctx.TK_MUL_ASIG() != null) {
+            abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "*");
+        } else if(ctx.TK_DIV_ASIG() != null) {
+            abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "/");
+        } else if(ctx.TK_MOD_ASIG() != null) {
+            abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "%");
         }
         return null;
     }
 
     @Override
-    public T visitSumAsign(BCCParser.SumAsignContext ctx) {
-        abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "+");
-        return null;
+    public T visitAsign(BCCParser.AsignContext ctx) {
+        return visitAsigns(ctx.asigns());
     }
-
-    @Override
-    public T visitResAsign(BCCParser.ResAsignContext ctx) {
-        abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "-");
-        return null;
-    }
-
-    @Override
-    public T visitMulAsign(BCCParser.MulAsignContext ctx) {
-        abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "*");
-        return null;
-    }
-
-    @Override
-    public T visitDivAsign(BCCParser.DivAsignContext ctx) {
-        abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "/");
-        return null;
-    }
-
-    @Override
-    public T visitModAsign(BCCParser.ModAsignContext ctx) {
-        abstractOperationAndAsig(ctx.lexpr(), ctx.ID(), "%");
-        return null;
-    }
-
 
     @Override
     public T visitPrint(BCCParser.PrintContext ctx){
@@ -114,8 +103,10 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         Object value =  System.console().readLine();
         try {
             updateVar(id, value);
-        } catch (VarNotDeclaredException e) {
-            reportSemanticError(e);
+        } catch (SemanticException se) {
+            reportSemanticError(ctx.getStart(), se);
+        } catch (Exception e) {
+            reportSemanticError(e.toString());
         }
         return null;
     }
@@ -123,10 +114,93 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
     @Override
     public T visitRepeat(BCCParser.RepeatContext ctx) {
         int count = Integer.parseInt(ctx.TK_NUM().getText());
+
         for (int i = 0; i < count; i++) {
             visitStmt_block(ctx.stmt_block());
         }
 
+        return null;
+    }
+
+    @Override
+    public T visitLoop(BCCParser.LoopContext ctx) {
+
+        while (true) {
+            visitStmt_block(ctx.stmt_block());
+            //mecanismo de break
+            if(breakSignal) { breakSignal = false; break; }
+        }
+        return null;
+    }
+
+    @Override
+    public T visitFor(BCCParser.ForContext ctx) {
+        visitAsigns(ctx.asigns());
+        while ((Boolean) visitLexpr(ctx.lexpr(0))) {
+            visitStmt_block(ctx.stmt_block());
+            //mecanismo de break
+            //if(breakSignal) { breakSignal = false; break; }
+            visitLexpr(ctx.lexpr(1));
+        }
+        return null;
+    }
+
+    @Override
+    public T visitWhile(BCCParser.WhileContext ctx) {
+        while ((Boolean) visitLexpr(ctx.lexpr())) {
+            visitStmt_block(ctx.stmt_block());
+            //mecanismo de break
+            //if(breakSignal) { breakSignal = false; break; }
+        }
+        return null;
+    }
+
+    @Override
+    public T visitUntil(BCCParser.UntilContext ctx) {
+        while (!(Boolean) visitLexpr(ctx.lexpr())) {
+            visitStmt_block(ctx.stmt_block());
+            //mecanismo de break
+            //if(breakSignal) { breakSignal = false; break; }
+        }
+        return null;
+    }
+
+    @Override
+    public T visitDowhile(BCCParser.DowhileContext ctx) {
+        do  {
+            visitStmt_block(ctx.stmt_block());
+            //mecanismo de break
+            //if(breakSignal) { breakSignal = false; break; }
+        } while((Boolean) visitLexpr(ctx.lexpr()));
+        return null;
+    }
+
+    @Override
+    public T visitDountil(BCCParser.DountilContext ctx) {
+        do  {
+            visitStmt_block(ctx.stmt_block());
+            //mecanismo de break
+            //if(breakSignal) { breakSignal = false; break; }
+        } while(!(Boolean) visitLexpr(ctx.lexpr()));
+        return null;
+    }
+
+    @Override
+    public T visitBreak(BCCParser.BreakContext ctx) {
+        breakSignal = true;
+        return null;
+    }
+
+
+    @Override
+    public T visitWhen(BCCParser.WhenContext ctx) {
+        abstractCondition(ctx.lexpr(), ctx.stmt_block());
+        return null;
+    }
+
+    @Override
+    public T visitUnless(BCCParser.UnlessContext ctx) {
+        abstractCondition(ctx.lexpr(), ctx.stmt_block());
         return null;
     }
 
@@ -196,8 +270,8 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
             //suponemos que es mayor que uno
             //reconocemos el operador
             String op = getCompareOperator(ctx);
-            Double a = (Double) visitSimple_expr(ctx.simple_expr(0));
-            Double b = (Double) visitSimple_expr(ctx.simple_expr(1));
+            Object a =  visitSimple_expr(ctx.simple_expr(0));
+            Object b =  visitSimple_expr(ctx.simple_expr(1));
             Boolean result = compare(op, a, b);
             return (T) result;
         }
@@ -250,8 +324,10 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
             if(ctx.TK_INCREMENTO()!=null || ctx.TK_DECREMENTO()!=null) return vistitFactorPrePostIncDec(ctx);
             if(ctx.ID()!=null) return visitFactorId(ctx);
             if(ctx.FID()!=null) return visitFactorFID(ctx);
+        } catch (SemanticException sex){
+            reportSemanticError(ctx.getStart(), sex);
         } catch (Exception ex){
-            reportSemanticError(ex);
+            reportSemanticError(ex.toString());
         }
 
         if(ctx.lexpr()!=null) return visitLexpr(ctx.lexpr(0));
@@ -320,13 +396,10 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         return (T) value; //se retorna el valor sin modificar
     }
 
-    private T visitFactorFID(BCCParser.FactorContext ctx) throws FunctionNotDeclaredException, InvalidArgsException, VarNotDeclaredException {
+    private T visitFactorFID(BCCParser.FactorContext ctx) throws FunctionNotDeclaredException, InvalidArgsException, VarNotDeclaredException, VarNeverAssignedException {
 
         String fid = ctx.FID().getText();
         FunctionSymbol fs = getFunctionSymbol(fid);
-
-        T result;
-        List<T> args = new ArrayList<>();
 
         //creamos un nuevo memoryspace para la función
         FunctionSpace<T> functionSpace = new FunctionSpace<>(fs);
@@ -336,7 +409,9 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         currentSpace = functionSpace;
         stack.add(functionSpace);
 
+
         //obtenemos los parametros antes de llamar a la función
+        List<T> args = new ArrayList<>();
         ctx.lexpr().forEach((lexpr ->  args.add(visitLexpr(lexpr))));
 
         //una vez obtenidos se cargan en el memory space
@@ -345,7 +420,7 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         //se invoca la ejecución de la función
         visitStmt_block((BCCParser.Stmt_blockContext) fs.getBody());
 
-        result = currentSpace.getVarValue("return");
+        T result = currentSpace.getVarValue("return");
 
         //revisar donde es mejor poner esto
         stack.removeLast();
@@ -379,9 +454,35 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         return "";
     }
 
-    private Boolean compare(String op, Double num1, Double num2){
+    private Boolean compare(String op, Object a, Object b) {
+        if(a instanceof Boolean && b instanceof Boolean){
+            return compareBooleans(op, (Boolean)a, (Boolean)b);
+        } else {
+            return compareNumbers(op, (Double)a, (Double)b);
+        }
+    }
+
+    private Boolean compareBooleans(String op, Boolean term1, Boolean term2) {
+        Boolean ans = null;
+
+        switch (op) {
+            case "==":
+                ans = term1 == term2;
+                break;
+            case "!=":
+                ans = term1 != term2;
+                break;
+            default:
+                reportSemanticError(String.format("El operador de comparación '%s' es invalido con variables tipo bool", op));
+                break;
+        }
+        return ans;
+    }
+
+    private Boolean compareNumbers(String op, Double num1, Double num2){
         //TODO hacer referencia a los token directamente y no a sus lexemas
         Boolean ans = null;
+
         switch (op){
             case "<":
                 ans = num1 < num2;
@@ -428,6 +529,9 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
             case "%":
                 ans = num1 % num2;
                 break;
+            case "":
+                ans = num2;
+                break;
 
             default:
                 reportSemanticError(String.format("El operador aritmetico '%s' es invalido", op));
@@ -438,14 +542,24 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         return ans;
     }
 
+    private void abstractCondition(Object lexpr, Object block){
+        boolean condition = (Boolean) visitLexpr((BCCParser.LexprContext)lexpr);
+
+        if(condition) {
+            visitStmt_block((BCCParser.Stmt_blockContext)block);
+        }
+    }
+
     private void abstractOperationAndAsig(BCCParser.LexprContext lexpr, TerminalNode ID, String op ){
         String id = ID.getText();
         Double resultExpr = (Double) visitLexpr(lexpr);
         try {
             Double currentValue = (Double) getVarValue(id);
             updateVar(id, compute(op, currentValue, resultExpr));
+        } catch (SemanticException se) {
+            reportSemanticError(lexpr.getStart(), se);
         } catch (Exception e) {
-            reportSemanticError(e);
+            reportSemanticError(e.toString());
         }
     }
 
@@ -485,15 +599,15 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         }
     }
 
-    private T getVarValue(String id) throws VarNotDeclaredException {
+    private T getVarValue(String id) throws VarNotDeclaredException, VarNeverAssignedException {
         T result;
         try {
             result = currentSpace.getVarValue(id);
-        } catch (VarNotDeclaredException ex1) {
+        } catch (VarNotDeclaredException | VarNeverAssignedException ex1) {
             try {
                 //intentamos buscar en el contexto global
                 result = global.getVarValue(id);
-            } catch (VarNotDeclaredException ex2) {
+            } catch (VarNotDeclaredException | VarNeverAssignedException ex2) {
                 throw ex2;
             }
         }
@@ -509,8 +623,9 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
     }
 
 
-    private void reportSemanticError(Exception ex) {
-        reportSemanticError(ex.toString());
+    private void reportSemanticError(Token token, SemanticException sex) {
+        sex.setPosition(token.getLine(), token.getCharPositionInLine());
+        reportSemanticError(sex.toString());
     }
 
     private void reportSemanticError(String message) {

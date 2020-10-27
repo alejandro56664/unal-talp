@@ -1,0 +1,8 @@
+var veces:num;
+var i:num;
+
+veces:=5;
+for(i:=0;i<veces;i++) do {
+    print i;
+}
+end;

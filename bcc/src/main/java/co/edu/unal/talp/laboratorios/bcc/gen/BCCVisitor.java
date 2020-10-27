@@ -152,20 +152,6 @@ public interface BCCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBreak(BCCParser.BreakContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code decrement}
-	 * labeled alternative in {@link BCCParser#stmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDecrement(BCCParser.DecrementContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code increment}
-	 * labeled alternative in {@link BCCParser#stmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIncrement(BCCParser.IncrementContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code asign}
 	 * labeled alternative in {@link BCCParser#stmt}.
 	 * @param ctx the parse tree
@@ -173,40 +159,11 @@ public interface BCCVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAsign(BCCParser.AsignContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code sumAsign}
-	 * labeled alternative in {@link BCCParser#stmt}.
+	 * Visit a parse tree produced by {@link BCCParser#asigns}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSumAsign(BCCParser.SumAsignContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code resAsign}
-	 * labeled alternative in {@link BCCParser#stmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitResAsign(BCCParser.ResAsignContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code mulAsign}
-	 * labeled alternative in {@link BCCParser#stmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMulAsign(BCCParser.MulAsignContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code divAsign}
-	 * labeled alternative in {@link BCCParser#stmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDivAsign(BCCParser.DivAsignContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code modAsign}
-	 * labeled alternative in {@link BCCParser#stmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitModAsign(BCCParser.ModAsignContext ctx);
+	T visitAsigns(BCCParser.AsignsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link BCCParser#lexpr}.
 	 * @param ctx the parse tree

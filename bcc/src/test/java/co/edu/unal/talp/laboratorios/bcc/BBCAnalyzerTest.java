@@ -24,7 +24,10 @@ public class BBCAnalyzerTest {
         //interpret("repeat_vars");
         //interpret("fun_basic");
         //interpret("repeat_fun");
-        interpret("repeat_fun_input");
+        //interpret("repeat_for");
+        //interpret("example_paper1");
+        interpret("example_paper2");
+        //interpret("repeat_fun_input");
         /*
         compareLexerOutput("test1");
         compareLexerOutput("test2");
