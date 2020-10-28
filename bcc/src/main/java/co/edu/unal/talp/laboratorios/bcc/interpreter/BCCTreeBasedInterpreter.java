@@ -27,20 +27,17 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         Map<String, String> args = new HashMap<>();
         Map<String, String> vars = new HashMap<>();
 
-        try {
-            abstractVar_decl(ctx.var_decl(0), (nameType)-> args.put(nameType.a, nameType.b));
-            if(ctx.var_decl().size() > 1) {
-                //solo se ejecuta si hay una declaración de variables
-                abstractVar_decl(ctx.var_decl(1), (nameType)-> vars.put(nameType.a, nameType.b));
-            }
-        } catch (VarAlreadyDeclaredException e) {
-            reportSemanticError(ctx.getStart(), e);
+        abstractVar_decl(ctx.var_decl(0), args);
+
+        if(ctx.var_decl().size() > 1) {
+            //solo se ejecuta si hay una declaración de variables
+            abstractVar_decl(ctx.var_decl(1), vars);
         }
 
         FunctionSymbol fs = new FunctionSymbol(fid, args, returnType, vars, body);
 
         try {
-            addFunctionToStack(fid, fs);
+            securedRegisterFun(fid, fs);
         } catch (FunctionAlreadyDeclaredException e) {
             reportSemanticError(ctx.getStart(), e);
         }
@@ -51,11 +48,13 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
 
     @Override
     public T visitVar_decl(BCCParser.Var_declContext ctx) {
-        try {
-            abstractVar_decl(ctx, (nameType)-> currentSpace.registerVar(nameType.a, nameType.b));
-        } catch (VarAlreadyDeclaredException e) {
-            reportSemanticError(ctx.getStart(), e);
-        }
+            abstractVar_decl(ctx, (nameType)-> {
+                try {
+                    currentSpace.registerVar(nameType.a, nameType.b);
+                } catch (VarAlreadyDeclaredException e) {
+                    reportSemanticError(ctx.getStart(), e);
+                }
+            });
         return null;
     }
 
@@ -203,7 +202,6 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         breakSignal = true;
         return null;
     }
-
 
     @Override
     public T visitWhen(BCCParser.WhenContext ctx) {
@@ -367,7 +365,11 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
 
         //TODO esto debería generar un error en el caso de haber un return en el memoryspace global
         String returnType = ((FunctionSpace)currentSpace).getFunctionSymbol().getReturnType();
-        currentSpace.registerVar("return",returnType, result );
+        try {
+            currentSpace.registerVar("return",returnType, result );
+        } catch (VarAlreadyDeclaredException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
@@ -389,12 +391,10 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
 
     }
 
-
     private T visitFactorId(BCCParser.FactorContext ctx) throws Exception {
         String id = ctx.ID().getText();
         return getVarValue(id);
     }
-
 
     @SuppressWarnings("unchecked")
     private T visitFactorPreIncDec(String id, boolean decrement) throws Exception {
@@ -407,7 +407,6 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         updateVar(id, value); //se guarda el valor modificado
         return (T) value; //se retorna el valor modificado
     }
-
 
     @SuppressWarnings("unchecked")
     private T visitFactorPostIncDec(String id, boolean decrement) throws Exception {
@@ -599,8 +598,16 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         return new Pair<>(id,type);
     }
 
-    private void abstractVar_decl(BCCParser.Var_declContext ctx, Consumer<Pair<String,String>> registerVar) throws VarAlreadyDeclaredException {
-        //TODO disparar excepción si una variable ya esta declarada
+    private void abstractVar_decl(BCCParser.Var_declContext ctx, Map<String,String> registry){
+        abstractVar_decl(ctx, (nameType)-> {
+            try {
+                securedRegisterVar(nameType, registry);
+            } catch (VarAlreadyDeclaredException e) {
+                reportSemanticError(ctx.getStart(), e);
+            }
+        });
+    }
+    private void abstractVar_decl(BCCParser.Var_declContext ctx, Consumer<Pair<String,String>> registerVar) {
         Pair<String,String> nameType;
         if(ctx.ID().size() == 1){
             //solo hay una variable
@@ -616,8 +623,15 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         }
     }
 
-    private void addFunctionToStack(String fid, FunctionSymbol fs) throws FunctionAlreadyDeclaredException {
-        //TODO disparar excepción si la función ya esta declarada
+    private void securedRegisterVar(Pair<String,String> nameType, Map<String,String> registry) throws VarAlreadyDeclaredException{
+        String name = nameType.a;
+        String type = nameType.b;
+        if (registry.get(name) != null) throw new VarAlreadyDeclaredException(name);
+        registry.put(name, type);
+    }
+
+    private void securedRegisterFun(String fid, FunctionSymbol fs) throws FunctionAlreadyDeclaredException {
+        if (functions.get(fid) != null) throw new FunctionAlreadyDeclaredException(fid);
         functions.put(fid, fs);
     }
 

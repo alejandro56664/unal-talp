@@ -25,11 +25,10 @@ public class Main
 
             System.out.println("BCC Demo (Presiona Ctrl+D para terminar o en windows Ctrl+Z y luego Ctrl+D)");
 
-            String isInteractive = cmd.getOptionValue("interactive");
+            boolean isInteractive = cmd.hasOption("interactive");
             String sourceFilePath = cmd.getOptionValue("source");
 
-            if(isInteractive != null) {
-                System.out.print(isInteractive);
+            if(isInteractive) {
                 System.out.print(">>>");
                 interpret(sourceLoader.loadFromConsole());
 

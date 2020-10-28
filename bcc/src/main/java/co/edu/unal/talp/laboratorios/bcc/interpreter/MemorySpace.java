@@ -1,5 +1,6 @@
 package co.edu.unal.talp.laboratorios.bcc.interpreter;
 
+import co.edu.unal.talp.laboratorios.bcc.exceptions.VarAlreadyDeclaredException;
 import co.edu.unal.talp.laboratorios.bcc.exceptions.VarNeverAssignedException;
 import co.edu.unal.talp.laboratorios.bcc.exceptions.VarNotDeclaredException;
 
@@ -21,12 +22,12 @@ public class MemorySpace<T> {
         varTypeTable = new HashMap<>();
     }
 
-    public void registerVar(String id, String type) {
-        varTypeTable.put(id, type);
-        updateVar(type, id, null);
+    public void registerVar(String id, String type) throws VarAlreadyDeclaredException {
+        registerVar(id, type,null);
     }
 
-    public void registerVar(String id, String type, T value) {
+    public void registerVar(String id, String type, T value) throws VarAlreadyDeclaredException {
+        if(varTypeTable.get(id) != null) throw new VarAlreadyDeclaredException(id);
         varTypeTable.put(id, type);
         updateVar(type, id, value);
     }
@@ -35,7 +36,7 @@ public class MemorySpace<T> {
 
     public void updateVar(String id, Object value) throws VarNotDeclaredException{
         String type = (String) varTypeTable.get(id);
-        checkExistence(id, type);
+        checkType(id, type);
         updateVar(type, id, value);
     }
 
@@ -43,7 +44,7 @@ public class MemorySpace<T> {
 
     public T getVarValue(String id) throws VarNotDeclaredException, VarNeverAssignedException {
         String type = (String) varTypeTable.get(id);
-        checkExistence(id, type);
+        checkType(id, type);
         T value = getVarValue(type, id);
         checkValue(id, value);
         return value;
@@ -55,7 +56,7 @@ public class MemorySpace<T> {
         }
     }
 
-    private void checkExistence(String id, String type) throws VarNotDeclaredException {
+    private void checkType(String id, String type) throws VarNotDeclaredException {
         if (type == null) {
             throw new VarNotDeclaredException(id);
         }

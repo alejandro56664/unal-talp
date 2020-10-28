@@ -1,6 +1,7 @@
 package co.edu.unal.talp.laboratorios.bcc.interpreter;
 
 import co.edu.unal.talp.laboratorios.bcc.exceptions.InvalidArgsException;
+import co.edu.unal.talp.laboratorios.bcc.exceptions.VarAlreadyDeclaredException;
 
 import java.util.List;
 import java.util.Map;
@@ -31,12 +32,24 @@ public class FunctionSpace<T> extends MemorySpace<T> {
         int i = 0;
         for (Map.Entry<String, String> arg:
              myArgs.entrySet()) {
-             registerVar(arg.getKey(), arg.getValue(), args.get(i)); i++;
+            try {
+                registerVar(arg.getKey(), arg.getValue(), args.get(i));
+            } catch (VarAlreadyDeclaredException e) {
+                //Nota: sería muy raro que llegará aquí variables repetidas debido al comportamiento de los hash maps
+                e.printStackTrace();
+            }
+            i++;
         }
 
         for (Map.Entry<String, String> var:
                 myVars.entrySet()) {
-            registerVar(var.getKey(), var.getValue());
+            try {
+                registerVar(var.getKey(), var.getValue());
+            } catch (VarAlreadyDeclaredException e) {
+                //Nota: sería muy raro que llegará aquí variables repetidas debido al comportamiento de los hash maps
+
+                e.printStackTrace();
+            }
         }
         
     }
