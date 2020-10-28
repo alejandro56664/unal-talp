@@ -16,35 +16,34 @@ public class BBCAnalyzerTest {
     //debería tomar un programa de ejemplo del disco y compararlo
     //la salida esperada.
 
-    final String path = "src/test/java/co/edu/unal/talp/laboratorios/bcc/fixtures";
+    final String path = "src/test/java/co/edu/unal/talp/laboratorios/bcc/fixtures/";
 
     SourceLoader sourceLoader = new SourceLoader();
     public void run(){
-        //interpret("repeat_basic");
-        //interpret("repeat_vars");
-        //interpret("fun_basic");
-        //interpret("fun_basic2");
-        //interpret("repeat_fun");
-        //interpret("repeat_for");
-        //interpret("example_paper1");
-        //interpret("example_paper2");
-        //interpret("factorial");
-        interpret("fibonacci_iterativo");
-        //interpret("repeat_fun_input");
-        /*
-        compareLexerOutput("test1");
+
+        /*compareLexerOutput("test1");
         compareLexerOutput("test2");
         compareLexerOutput("test3");
         compareLexerOutput("test4");
-        */
 
-        /*
         compareParserOutput("test5");
         compareParserOutput("test6");
         compareParserOutput("test7");
         compareParserOutput("test8");
-        compareParserOutput("test9");
-         */
+        compareParserOutput("test9");*/
+
+        interpret("repeat_basic");
+        interpret("repeat_vars");
+        interpret("fun_basic");
+        interpret("fun_basic2");
+        interpret("repeat_fun");
+        interpret("repeat_for");
+        interpret("example_paper1");
+        interpret("example_paper2");
+        interpret("factorial");
+        interpret("fibonacci_iterativo");
+        //interpret("repeat_fun_input");
+
 
     }
 

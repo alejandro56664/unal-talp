@@ -422,15 +422,13 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         return (T) value; //se retorna el valor sin modificar
     }
 
-    private T visitFactorFID(BCCParser.FactorContext ctx) throws FunctionNotDeclaredException, InvalidArgsException, VarNotDeclaredException, VarNeverAssignedException {
+    private T visitFactorFID(BCCParser.FactorContext ctx) throws FunctionNotDeclaredException, InvalidArgsException {
 
         String fid = ctx.FID().getText();
         FunctionSymbol fs = getFunctionSymbol(fid);
 
         //creamos un nuevo memoryspace para la función
         FunctionSpace<T> functionSpace = new FunctionSpace<>(fs);
-
-
 
         //obtenemos los parametros antes de llamar a la función
         List<T> args = new ArrayList<>();
@@ -448,7 +446,13 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         //se invoca la ejecución de la función
         visitStmt_block((BCCParser.Stmt_blockContext) fs.getBody());
 
-        T result = currentSpace.getVarValue("return");
+        T result = null;
+        try {
+            result = currentSpace.getVarValue("return");
+        } catch (VarNotDeclaredException | VarNeverAssignedException e) {
+            //no existen procedimientos en BCC por lo que siempre deben retornar algo
+            reportSemanticError(ctx.getStart(), e);
+        }
 
         //revisar donde es mejor poner esto
         stack.removeLast();
