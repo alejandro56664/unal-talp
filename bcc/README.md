@@ -55,3 +55,9 @@ Actualmente existen 4 casos de prueba creados para el lenguaje.
 TODO:
 - revisar documentación del paper para ver particularidades del lenguaje.
 
+# Interprete 
+
+Diagrama de clases
+
+![alt text](./doc/diagrama%20de%20clases.png)
+
