@@ -1,4 +1,4 @@
-# Análizador léxico para BCC
+# Análizador léxico, sintáctico e interprete para BCC
 
 ## Introducción
 bcc un lenguaje de programación diseñado principalmente para la enseñanza en los cursos de Lenguajes de Programación y Compiladores por el Profesor Juan David Velásquez de la Facultad de Minas de la Universidad Nacional de Colombia - Sede Medellín. Este semestre utilizaremos este lenguaje para desarrollar las prácticas propuestas en el curso.
