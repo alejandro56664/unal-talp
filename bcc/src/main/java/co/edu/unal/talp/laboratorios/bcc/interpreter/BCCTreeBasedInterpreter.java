@@ -367,9 +367,7 @@ public class BCCTreeBasedInterpreter<T> extends BCCBaseVisitor {
         String returnType = ((FunctionSpace)currentSpace).getFunctionSymbol().getReturnType();
         try {
             currentSpace.registerVar("return",returnType, result );
-        } catch (VarAlreadyDeclaredException e) {
-            e.printStackTrace();
-        }
+        } catch (VarAlreadyDeclaredException e) { }
         return result;
     }
 
